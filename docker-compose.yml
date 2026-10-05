@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # Main Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oddshaven-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - VAPID_SUBJECT=${VAPID_SUBJECT}
+      - VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY}
+      - VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - ADMIN_DEFAULT_PASSWORD=${ADMIN_DEFAULT_PASSWORD}
+    volumes:
+      - ./database.sqlite:/app/database.sqlite
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - oddshaven-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/session"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Push Notification Server
+  push-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oddshaven-push
+    command: node push-server.js
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - VAPID_SUBJECT=${VAPID_SUBJECT}
+      - VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY}
+      - VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY}
+    volumes:
+      - ./push-subscriptions.db:/app/push-subscriptions.db
+    restart: unless-stopped
+    networks:
+      - oddshaven-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx Reverse Proxy (optional)
+  nginx:
+    image: nginx:alpine
+    container_name: oddshaven-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - app
+      - push-server
+    restart: unless-stopped
+    networks:
+      - oddshaven-network
+
+networks:
+  oddshaven-network:
+    driver: bridge
+
+volumes:
+  database:
+  push-subscriptions:
