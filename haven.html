@@ -1,0 +1,2932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101510">
+  <meta name="description" content="OddsHaven football predictions, match insights and performance tracking.">
+  <title>OddsHaven — Football Intelligence</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101510;
+      --panel: #171d18;
+      --panel-raised: #1c241e;
+      --line: #29332b;
+      --muted: #89958b;
+      --text: #eff4ed;
+      --green: #c1f36c;
+      --green-dark: #202c17;
+      --orange: #ffb369;
+      --red: #ff7777;
+      --teal: #66dfc1;
+      --violet: #b9a0ff;
+      --blue: #82c9ff;
+      --pink: #ff9ec4;
+      --radius: 15px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; text-decoration: none; }
+    .app { min-height: 100vh; }
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 5;
+      display: flex;
+      width: 232px;
+      flex-direction: column;
+      border-right: 1px solid var(--line);
+      background: #131914;
+      padding: 25px 15px 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 11px; padding: 0 8px; }
+    .brand-mark {
+      display: block;
+      width: 36px;
+      height: 36px;
+      flex: 0 0 auto;
+      overflow: hidden;
+      border: 1px solid rgb(130 201 255 / 55%);
+      border-radius: 11px;
+      box-shadow: 0 4px 15px rgb(65 161 226 / 15%);
+    }
+    .brand-mark svg { display: block; width: 100%; height: 100%; }
+    .brand-name { font-size: 18px; font-weight: 800; letter-spacing: -.7px; }
+    .brand-name span { color: var(--green); }
+    .brand-caption { color: var(--muted); font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; }
+    .nav-label { margin: 35px 10px 10px; color: #68746a; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+    .nav { display: grid; gap: 5px; }
+    .nav a {
+      display: flex;
+      min-height: 40px;
+      align-items: center;
+      gap: 11px;
+      border-radius: 9px;
+      color: #a1aca2;
+      padding: 0 11px;
+      transition: background .18s, color .18s;
+    }
+    .nav a:hover, .nav a.active { background: #232c23; color: var(--green); }
+    .nav-icon { width: 18px; text-align: center; font-size: 13px; }
+    .admin-inline-action {
+      display: inline-flex;
+      min-height: 30px;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid #514779;
+      border-radius: 8px;
+      background: #28243a;
+      color: #d0c1ff;
+      padding: 0 9px;
+      font-size: 9px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .admin-inline-action:hover { border-color: #8172b2; background: #342d4a; }
+    .feature-icon { display: inline-block; width: 1.15em; text-align: center; }
+    .filter .feature-icon { margin-right: 5px; }
+    .category-tag .feature-icon { margin-right: 4px; }
+    .nav-count { margin-left: auto; color: var(--muted); font-size: 11px; }
+    .sidebar-bottom { margin-top: auto; }
+    .responsible {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #171e18;
+      padding: 13px;
+    }
+    .responsible strong { display: block; margin-bottom: 3px; font-size: 12px; }
+    .responsible p { margin: 0; color: var(--muted); font-size: 11px; }
+    .responsible a { display: inline-block; margin-top: 9px; color: var(--green); font-size: 11px; }
+    .user-mini { display: flex; align-items: center; gap: 10px; margin-top: 16px; padding: 8px 5px 0; }
+    .avatar {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      place-items: center;
+      border: 1px solid #566448;
+      border-radius: 50%;
+      background: #34402d;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .user-mini strong { display: block; font-size: 12px; }
+    .user-mini small { color: var(--muted); font-size: 10px; }
+    .main { min-height: 100vh; margin-left: 232px; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      display: flex;
+      height: 68px;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: rgb(16 21 16 / 92%);
+      padding: 0 34px;
+      backdrop-filter: blur(14px);
+    }
+    .breadcrumb { color: var(--muted); font-size: 12px; }
+    .breadcrumb strong { color: var(--text); font-weight: 600; }
+    .top-actions { display: flex; align-items: center; gap: 11px; }
+    .date-chip, .icon-button {
+      display: inline-flex;
+      min-height: 35px;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel);
+      color: #c2ccc2;
+      padding: 0 11px;
+      font-size: 11px;
+    }
+    .icon-button { width: 36px; padding: 0; cursor: pointer; font-size: 15px; }
+    .admin-button { color: var(--violet); }
+    .admin-button:hover { border-color: #655b86; background: #29243b; color: #d2b8ff; }
+    .admin-dialog, .auth-dialog {
+      width: min(720px, calc(100vw - 28px));
+      max-width: none;
+      max-height: min(88vh, 850px);
+      border: 1px solid #414b40;
+      border-radius: 17px;
+      background: #151b16;
+      color: var(--text);
+      padding: 0;
+      box-shadow: 0 24px 80px rgb(0 0 0 / 55%);
+    }
+    .auth-dialog {
+      width: min(440px, calc(100vw - 28px));
+      max-height: min(70vh, 500px);
+    }
+    .admin-dialog::backdrop, .auth-dialog::backdrop { background: rgb(4 8 5 / 76%); backdrop-filter: blur(5px); }
+    .admin-content { display: grid; gap: 17px; padding: 19px; }
+    .auth-content { display: grid; gap: 14px; padding: 19px; }
+    .auth-heading { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+    .auth-heading h2 { margin: 3px 0 3px; font-size: 19px; }
+    .auth-heading p { margin: 0; color: var(--muted); font-size: 10px; }
+    .auth-form { display: grid; gap: 10px; }
+    .auth-form .admin-feature-name { display: grid; gap: 6px; }
+    .admin-header { display: flex; align-items: start; justify-content: space-between; gap: 15px; }
+    .admin-header h2 { margin: 3px 0 4px; font-size: 19px; }
+    .admin-header p { margin: 0; color: var(--muted); font-size: 10px; }
+    .admin-notice { border: 1px solid #65502e; border-radius: 9px; background: #292318; color: #e6c995; padding: 10px 12px; font-size: 10px; }
+    .admin-section { min-width: 0; border: 1px solid var(--line); border-radius: 11px; background: #191f1a; padding: 12px; }
+    .admin-section h3 { margin: 0 0 4px; font-size: 12px; }
+    .admin-section > p { margin: 0 0 10px; color: var(--muted); font-size: 9px; }
+    .command-center { display: grid; gap: 11px; }
+    .command-center-heading { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+    .command-center-heading h3 { margin: 0 0 3px; font-size: 14px; }
+    .command-center-heading p { margin: 0; color: var(--muted); font-size: 9px; }
+    .command-center-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    .command-center-metric { min-width: 0; border: 1px solid var(--line); border-radius: 8px; background: #141a15; padding: 9px; }
+    .command-center-metric span { display: block; color: var(--muted); font-size: 9px; }
+    .command-center-metric strong { display: block; margin-top: 2px; font-size: 17px; }
+    .command-center-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+    .command-center-monitor { display: flex; flex-wrap: wrap; gap: 8px 16px; border-top: 1px solid var(--line); padding-top: 9px; color: var(--muted); font-size: 9px; }
+    .command-center-monitor strong { color: var(--green); }
+    .admin-customer-list { display: grid; gap: 7px; max-height: 240px; overflow-y: auto; }
+    .admin-customer-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 1px solid #39443a; border-radius: 8px; background: #151b16; padding: 8px 10px; }
+    .admin-customer-row strong, .admin-customer-row small { display: block; overflow-wrap: anywhere; }
+    .admin-customer-row strong { font-size: 10px; }
+    .admin-customer-row small { color: var(--muted); font-size: 9px; }
+    .admin-prediction-list { display: grid; max-height: 230px; gap: 7px; overflow: auto; margin-bottom: 12px; }
+    .admin-prediction-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 8px; border: 1px solid #29322a; border-radius: 8px; background: #1d241e; padding: 8px; }
+    .admin-prediction-match { min-width: 0; }
+    .admin-prediction-match strong { display: block; overflow-wrap: anywhere; color: #e2e9df; font-size: 10px; }
+    .admin-prediction-match small { display: block; margin-top: 2px; color: var(--muted); font-size: 8px; }
+    .admin-prediction-controls { display: flex; align-items: center; gap: 5px; }
+    .admin-prediction-status { width: 88px; min-height: 30px; }
+    .admin-prediction-action { min-height: 30px; padding: 0 8px; font-size: 9px; }
+    .admin-prediction-delete { border-color: #543738; color: #ff9a9a; }
+    .admin-prediction-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+    .admin-prediction-heading h3 { margin: 0; }
+    .admin-prediction-add-link { min-height: 28px; flex: 0 0 auto; }
+    .admin-prediction-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .admin-prediction-form .admin-feature-name { display: grid; gap: 4px; }
+    .admin-prediction-form .admin-input, .admin-prediction-form select { width: 100%; }
+    .admin-prediction-form .admin-field-wide { grid-column: 1 / -1; }
+    .admin-batch-heading, .admin-match-rows { grid-column: 1 / -1; }
+    .admin-batch-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .admin-match-rows { display: grid; gap: 8px; }
+    .admin-match-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; border: 1px solid #39443a; border-radius: 8px; padding: 9px; }
+    .admin-match-row-header { display: flex; grid-column: 1 / -1; justify-content: space-between; align-items: center; color: var(--muted); font-size: 10px; }
+    .admin-match-remove { min-height: 26px; }
+    .admin-prediction-form .admin-field-wide[hidden] { display: none; }
+    .admin-prediction-submit-row { display: flex; grid-column: 1 / -1; align-items: center; justify-content: space-between; gap: 8px; }
+    .admin-prediction-submit-row .admin-save { margin-left: auto; }
+    .prediction-status { border: 1px solid #44513d; border-radius: 5px; background: #252d23; color: #d7e5d2; padding: 2px 6px; font-size: 8px; font-weight: 700; }
+    .prediction-status[data-status="Won"] { border-color: #41623b; background: #20321f; color: var(--green); }
+    .prediction-status[data-status="Lost"] { border-color: #633c3c; background: #321f20; color: #ff9999; }
+    .prediction-status[data-status="Void"] { border-color: #51515f; background: #282833; color: #c3c3d5; }
+    .admin-risk-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+    .admin-risk-field { display: grid; gap: 5px; color: #aeb9ad; font-size: 9px; }
+    .admin-risk-save { grid-column: 1 / -1; justify-self: end; min-height: 32px; }
+    .admin-market-price-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+    .admin-market-price-field { display: grid; min-width: 0; gap: 5px; color: #aeb9ad; font-size: 9px; }
+    .admin-market-price-save { grid-column: 1 / -1; justify-self: end; min-height: 32px; }
+    .admin-feature-name { min-width: 0; overflow-wrap: anywhere; color: #dce5da; font-size: 10px; font-weight: 650; }
+    .admin-input {
+      width: 100%;
+      min-width: 0;
+      min-height: 32px;
+      border: 1px solid #39443a;
+      border-radius: 7px;
+      outline: none;
+      background: #121713;
+      color: var(--text);
+      padding: 0 9px;
+      font: inherit;
+      font-size: 10px;
+    }
+    .admin-input:focus { border-color: #788f56; }
+    .admin-announcement-form { display: grid; gap: 8px; }
+    .admin-input { min-height: 36px; }
+    .admin-input[type="text"] { padding: 8px 9px; }
+    textarea.admin-input { min-height: 76px; resize: vertical; }
+    .admin-form-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .admin-save { min-height: 34px; }
+    .admin-dialog-close { flex: 0 0 auto; }
+    @media (max-width: 520px) {
+      .admin-content { gap: 11px; padding: 13px; }
+      .admin-feature-row { grid-template-columns: minmax(0, 1fr) auto; gap: 7px; }
+      .admin-prediction-row { grid-template-columns: minmax(0, 1fr) auto; }
+      .admin-prediction-controls { grid-column: 1 / -1; justify-content: flex-end; }
+      .admin-prediction-form { grid-template-columns: 1fr; }
+      .admin-prediction-form .admin-field-wide, .admin-prediction-submit-row, .admin-batch-heading, .admin-match-rows { grid-column: 1; }
+      .admin-match-row { grid-template-columns: 1fr; }
+      .admin-match-row-header { grid-column: 1; }
+      .admin-risk-grid { grid-template-columns: 1fr; }
+      .admin-market-price-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .command-center-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .admin-dialog { max-height: 92vh; }
+    }
+    .page { width: min(1440px, 100%); margin: 0 auto; padding: 29px 34px 48px; }
+    .eyebrow { color: var(--green); font-size: 10px; font-weight: 800; letter-spacing: 1.45px; text-transform: uppercase; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      min-height: 211px;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid #33412e;
+      border-radius: 18px;
+      background:
+        radial-gradient(ellipse at 83% 55%, rgb(150 199 85 / 17%), transparent 34%),
+        linear-gradient(116deg, #1b241a 2%, #19221a 57%, #202b1c 100%);
+      padding: 28px 35px;
+    }
+    .hero::after {
+      position: absolute;
+      top: -94px;
+      right: 69px;
+      width: 270px;
+      height: 270px;
+      border: 1px solid rgb(193 243 108 / 11%);
+      border-radius: 50%;
+      box-shadow: 0 0 0 34px rgb(193 243 108 / 3%), 0 0 0 69px rgb(193 243 108 / 3%);
+      content: "";
+      pointer-events: none;
+    }
+    .hero-copy { position: relative; z-index: 1; max-width: 560px; }
+    .hero h1 { margin: 9px 0 7px; font-size: clamp(27px, 3.4vw, 39px); letter-spacing: -1.6px; line-height: 1.14; }
+    .hero h1 span { color: var(--green); }
+    .hero-copy p { max-width: 480px; margin: 0; color: #a5b0a3; font-size: 12px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 19px; }
+    .button-primary, .button-secondary {
+      min-height: 37px;
+      border-radius: 9px;
+      padding: 0 14px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .16s, filter .16s;
+    }
+    .button-primary:hover, .button-secondary:hover, .button-whatsapp:hover { transform: translateY(-1px); filter: brightness(1.1); }
+    .button-primary { border: 1px solid var(--green); background: var(--green); color: #182111; }
+    .button-secondary { border: 1px solid #43523d; background: #222d21; color: #d7e5d2; }
+    .button-whatsapp { display: inline-flex; min-height: 37px; align-items: center; justify-content: center; gap: 7px; border: 1px solid #35bd73; border-radius: 9px; background: #16894c; color: #fff; padding: 0 14px; font-size: 11px; font-weight: 750; transition: transform .16s, filter .16s; }
+    .hero-art { position: relative; z-index: 1; display: grid; width: 208px; justify-items: center; gap: 2px; color: var(--green); }
+    .hero-art .orb { font-size: 74px; line-height: 1; filter: drop-shadow(0 5px 19px rgb(193 243 108 / 14%)); }
+    .hero-art .art-label { color: #bac8b3; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; }
+    .haven-logo-card {
+      position: relative;
+      display: grid;
+      width: 194px;
+      gap: 4px;
+      justify-items: center;
+      overflow: hidden;
+      border: 1px solid rgb(130 201 255 / 55%);
+      border-radius: 19px;
+      background: linear-gradient(150deg, #398bc5, #236895 62%, #194e75);
+      box-shadow: 0 12px 32px rgb(16 57 89 / 35%), inset 0 1px rgb(255 255 255 / 19%);
+      padding: 12px 15px 10px;
+      color: #fff;
+      text-align: center;
+    }
+    .haven-logo-card::before, .haven-logo-card::after {
+      position: absolute;
+      top: 5px;
+      color: #ffdb45;
+      content: "★";
+      font-size: 16px;
+      text-shadow: 0 2px 8px rgb(255 219 69 / 35%);
+    }
+    .haven-logo-card::before { left: 13px; transform: rotate(-13deg); }
+    .haven-logo-card::after { right: 13px; transform: rotate(13deg); }
+    .haven-logo-die { width: 74px; height: 63px; filter: drop-shadow(0 3px 4px rgb(9 37 61 / 25%)); }
+    .haven-logo-odds { display: flex; width: 100%; justify-content: center; gap: 10px; color: #ffe54b; font-size: 14px; font-weight: 900; letter-spacing: -.4px; text-shadow: 0 2px 0 rgb(130 81 8 / 30%); }
+    .haven-logo-word { margin-top: 1px; font-size: 20px; font-weight: 850; letter-spacing: -1px; text-shadow: 0 2px 7px rgb(12 43 65 / 35%); }
+    .haven-logo-note { color: #e0f1ff; font-size: 7px; font-weight: 750; letter-spacing: 1.5px; }
+    .motivation-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #414063;
+      border-radius: 12px;
+      background: linear-gradient(100deg, #252338, #1b202a 65%, #1e2b30);
+      padding: 11px 15px;
+    }
+    .motivation-icon { display: grid; width: 31px; height: 31px; flex: 0 0 auto; place-items: center; border: 1px solid #655b86; border-radius: 9px; background: #35304c; color: #d2b8ff; font-size: 13px; }
+    .motivation-copy { min-width: 0; }
+    .motivation-label { color: #c5aaff; font-size: 8px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; }
+    .motivation-copy p { margin: 2px 0 0; color: #e4e3ed; font-size: 11px; font-weight: 650; }
+    .motivation-aside { margin-left: auto; color: #a4a0bb; font-size: 9px; text-align: right; }
+    .section { scroll-margin-top: 84px; margin-top: 26px; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+    .section-heading h2 { margin: 2px 0 0; font-size: 17px; letter-spacing: -.35px; }
+    .section-subtitle { color: var(--muted); font-size: 11px; }
+    .text-link { border: 0; background: transparent; color: var(--green); padding: 0; font-size: 11px; cursor: pointer; }
+    .feature-hub {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #303d30;
+      border-radius: 17px;
+      background: linear-gradient(145deg, #192119, #151b16 72%);
+      padding: 19px;
+    }
+    .feature-hub::before {
+      position: absolute;
+      top: -125px;
+      right: -80px;
+      width: 260px;
+      height: 260px;
+      border: 1px solid rgb(193 243 108 / 7%);
+      border-radius: 50%;
+      box-shadow: 0 0 0 34px rgb(193 243 108 / 2%), 0 0 0 70px rgb(193 243 108 / 2%);
+      content: "";
+      pointer-events: none;
+    }
+    .feature-hub-heading { position: relative; z-index: 1; display: flex; align-items: end; justify-content: space-between; gap: 14px; margin-bottom: 15px; }
+    .feature-hub-heading h2 { margin: 3px 0 3px; font-size: 19px; letter-spacing: -.5px; }
+    .feature-hub-heading p { margin: 0; color: var(--muted); font-size: 10px; }
+    .feature-hub-count { flex: 0 0 auto; border: 1px solid #374534; border-radius: 8px; background: #1d281c; color: #cfdfc9; padding: 6px 9px; font-size: 9px; }
+    .feature-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 9px; }
+    .feature-card {
+      position: relative;
+      --feature-accent: var(--green);
+      display: flex;
+      min-width: 0;
+      min-height: 128px;
+      flex-direction: column;
+      align-items: flex-start;
+      border: 1px solid #2d382e;
+      border-top-color: color-mix(in srgb, var(--feature-accent) 50%, #2d382e);
+      border-radius: 12px;
+      background: linear-gradient(145deg, color-mix(in srgb, var(--feature-accent) 7%, #1c251d), #192019 78%);
+      padding: 11px;
+      text-align: left;
+      transition: transform .17s, border-color .17s, background .17s, opacity .17s;
+    }
+    .feature-card:not(:disabled):not([data-coming-soon]) { cursor: pointer; }
+    .feature-card:not(:disabled):not([data-coming-soon]):hover { transform: translateY(-2px); border-color: var(--feature-accent); background: color-mix(in srgb, var(--feature-accent) 11%, #1c241e); box-shadow: 0 8px 24px color-mix(in srgb, var(--feature-accent) 9%, transparent); }
+    .feature-card:focus-visible { outline: 2px solid var(--feature-accent); outline-offset: 2px; }
+    .feature-card:nth-child(5n + 1) { --feature-accent: var(--green); }
+    .feature-card:nth-child(5n + 2) { --feature-accent: var(--violet); }
+    .feature-card:nth-child(5n + 3) { --feature-accent: var(--teal); }
+    .feature-card:nth-child(5n + 4) { --feature-accent: var(--orange); }
+    .feature-card:nth-child(5n) { --feature-accent: var(--blue); }
+    .feature-card:disabled { opacity: .63; }
+    .feature-card:disabled::after, .feature-card[data-coming-soon]::after {
+      position: absolute;
+      top: 10px;
+      right: 9px;
+      border: 1px solid #3d443a;
+      border-radius: 5px;
+      background: #20251f;
+      color: #929a8e;
+      padding: 2px 4px;
+      content: "SOON";
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: .45px;
+    }
+    .feature-icon-box {
+      display: grid;
+      width: 31px;
+      height: 31px;
+      flex: 0 0 auto;
+      place-items: center;
+      border: 1px solid color-mix(in srgb, var(--feature-accent) 36%, #3b4a32);
+      border-radius: 9px;
+      background: color-mix(in srgb, var(--feature-accent) 14%, #20251f);
+      color: var(--feature-accent);
+      font-size: 13px;
+    }
+    .feature-card:disabled .feature-icon-box { filter: saturate(.5); }
+    .feature-card[data-coming-soon] .feature-icon-box { filter: saturate(.5); }
+    .feature-card-action {
+      display: flex;
+      width: 100%;
+      flex: 1;
+      flex-direction: column;
+      align-items: flex-start;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      text-align: left;
+      font: inherit;
+    }
+    .feature-card-action:disabled { cursor: not-allowed; }
+    .feature-card-action:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+    .feature-name { display: block; margin-top: 9px; color: #e3e9e0; font-size: 10px; font-weight: 700; line-height: 1.25; }
+    .feature-description { display: block; margin-top: 3px; color: #829084; font-size: 8px; line-height: 1.35; }
+    .feature-price { display: flex; align-items: baseline; gap: 0; margin-top: auto; padding-top: 8px; padding-right: 68px; color: #829084; font-size: 0; }
+    .feature-price strong { color: var(--feature-accent); font-size: 12px; font-weight: 800; letter-spacing: -.2px; }
+    .feature-card:not(:disabled):not([data-coming-soon]):not(.priced-feature):not(.has-listed-price)::before { position: absolute; right: 10px; bottom: 11px; color: #8fa27b; content: "↗"; font-size: 10px; }
+    .book-feature {
+      position: absolute;
+      right: 9px;
+      bottom: 9px;
+      display: flex;
+      min-width: 59px;
+      height: 29px;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid color-mix(in srgb, var(--feature-accent) 56%, #29332b);
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--feature-accent) 14%, #1c241e);
+      color: var(--feature-accent);
+      font-size: 10px;
+      font-weight: 700;
+      transition: background .17s, transform .17s;
+    }
+    .book-feature:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--feature-accent) 25%, #1c241e); }
+    .book-feature:focus-visible { outline: 2px solid var(--feature-accent); outline-offset: 2px; }
+    .book-feature::after { content: "Book"; }
+    .book-feature-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .stat-card {
+      min-height: 98px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      padding: 14px 15px;
+    }
+    .stat-top { display: flex; align-items: center; justify-content: space-between; color: #a6b0a6; font-size: 10px; }
+    .stat-icon { display: grid; width: 27px; height: 27px; place-items: center; border-radius: 8px; background: color-mix(in srgb, var(--stat-accent) 13%, #20251f); color: var(--stat-accent); font-size: 12px; }
+    .stat-card:nth-child(1) { --stat-accent: var(--green); }
+    .stat-card:nth-child(2) { --stat-accent: var(--teal); }
+    .stat-card:nth-child(3) { --stat-accent: var(--orange); }
+    .stat-card:nth-child(4) { --stat-accent: var(--violet); }
+    .stat-value { display: flex; align-items: baseline; gap: 8px; margin-top: 7px; font-size: 24px; font-weight: 750; letter-spacing: -.7px; }
+    .stat-change { color: var(--green); font-size: 10px; font-weight: 600; letter-spacing: 0; }
+    .stat-note { margin-top: 1px; color: #7f8b80; font-size: 10px; }
+    .content-grid { display: grid; grid-template-columns: minmax(0, 1.72fr) minmax(270px, .88fr); gap: 14px; align-items: start; }
+    .panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+    .panel-pad { padding: 17px; }
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .filter {
+      min-height: 29px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: transparent;
+      color: #a0aba1;
+      padding: 0 10px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+    .filter:hover, .filter.active { border-color: #5d7445; background: #27331f; color: var(--green); }
+    .filter:disabled { border-style: dashed; color: #6f7a70; cursor: not-allowed; opacity: .7; }
+    .pick-list { display: grid; gap: 9px; }
+    .pick {
+      border: 1px solid #2a342b;
+      border-radius: 11px;
+      background: #1a211b;
+      padding: 12px 13px;
+      transition: border-color .17s;
+    }
+    .pick:hover { border-color: #46553d; }
+    .pick-top, .pick-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .league { color: #89968a; font-size: 9px; }
+    .category-tag { border-radius: 5px; background: #28331f; color: var(--green); padding: 3px 7px; font-size: 9px; font-weight: 700; }
+    .teams { display: flex; align-items: center; gap: 8px; margin: 10px 0; font-size: 12px; font-weight: 700; }
+    .team-mark { display: grid; width: 23px; height: 23px; place-items: center; border-radius: 7px; background: #29332b; color: #ced9c8; font-size: 8px; }
+    .vs { color: #737e74; font-size: 9px; font-weight: 500; }
+    .pick-market { min-width: 0; color: #96a196; font-size: 10px; }
+    .pick-market strong { display: block; margin-top: 2px; color: var(--text); font-size: 11px; font-weight: 600; }
+    .pick-metrics { display: flex; align-items: center; gap: 15px; }
+    .metric { color: #859186; font-size: 9px; }
+    .metric strong { display: block; color: #e2e9df; font-size: 11px; font-weight: 700; }
+    .metric.pick-price strong { color: var(--orange); }
+    .risk-tier-note { margin: -5px 0 11px; color: #8f9a8f; font-size: 9px; }
+    .risk-tier-note strong { color: #d4ddd1; font-weight: 650; }
+    .confidence { color: var(--green) !important; }
+    .pick-buttons { display: flex; align-items: center; gap: 7px; }
+    .add-pick, .save-pick {
+      display: grid;
+      width: 29px;
+      height: 29px;
+      place-items: center;
+      border: 1px solid #384238;
+      border-radius: 7px;
+      background: transparent;
+      color: #c1cdc1;
+      cursor: pointer;
+    }
+    .add-pick:hover, .save-pick:hover, .save-pick.saved { border-color: #708c50; background: #29351f; color: var(--green); }
+    .empty-state { padding: 24px 10px; color: var(--muted); text-align: center; font-size: 11px; }
+    .side-stack { display: grid; gap: 13px; }
+    .my-slip-list { display: grid; gap: 7px; margin-top: 11px; }
+    .my-slip-item { display: flex; align-items: start; justify-content: space-between; gap: 8px; border: 1px solid #29352b; border-radius: 8px; background: #1a211b; padding: 8px; }
+    .my-slip-match { min-width: 0; }
+    .my-slip-match strong { display: block; color: #e2e9df; font-size: 10px; overflow-wrap: anywhere; }
+    .my-slip-match small { display: block; margin-top: 3px; color: var(--muted); font-size: 8px; }
+    .my-slip-price { flex: 0 0 auto; color: var(--orange); font-size: 9px; font-weight: 700; }
+    .my-slip-remove { flex: 0 0 auto; border: 0; background: transparent; color: #aab4aa; padding: 1px 3px; cursor: pointer; }
+    .my-slip-total { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; border-top: 1px solid var(--line); padding-top: 9px; color: #aab4aa; font-size: 9px; }
+    .my-slip-total strong { color: var(--orange); font-size: 11px; }
+    .my-slip-submit { width: 100%; margin-top: 10px; }
+    .my-slip-submit:disabled { cursor: not-allowed; filter: grayscale(.45); opacity: .55; }
+    .my-slip-note { margin: 8px 0 0; color: var(--muted); font-size: 8px; line-height: 1.5; }
+    .live-header { display: flex; align-items: center; justify-content: space-between; }
+    .live-title { font-size: 12px; font-weight: 700; }
+    .live-tag { display: flex; align-items: center; gap: 6px; color: #ff8989; font-size: 9px; font-weight: 800; letter-spacing: .6px; }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #ff6e6e; box-shadow: 0 0 9px #ff6e6e; }
+    .live-match { margin-top: 12px; border: 1px solid #2a342b; border-radius: 10px; background: #1a211b; padding: 11px; }
+    .live-league { display: flex; justify-content: space-between; color: #859186; font-size: 9px; }
+    .live-score { display: flex; align-items: center; justify-content: space-between; margin-top: 11px; }
+    .live-team { display: grid; justify-items: center; gap: 5px; font-size: 9px; }
+    .club-badge { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 9px; background: #2d3b27; color: var(--green); font-size: 10px; font-weight: 800; }
+    .score { font-size: 21px; font-weight: 750; letter-spacing: 3px; }
+    .match-minute { margin-top: 9px; color: #8c988d; text-align: center; font-size: 9px; }
+    .match-minute strong { color: #ff8989; }
+    .ai-callout { position: relative; overflow: hidden; border: 1px solid #484064; border-radius: 13px; background: linear-gradient(135deg, #29243b, #1b1b25 80%); padding: 15px; }
+    .ai-callout::after { position: absolute; top: -15px; right: 4px; color: rgb(185 160 255 / 11%); content: "✳"; font-size: 85px; line-height: 1; }
+    .ai-title { position: relative; z-index: 1; color: var(--violet); font-size: 10px; font-weight: 800; letter-spacing: 1px; }
+    .ai-callout p { position: relative; z-index: 1; max-width: 240px; margin: 8px 0 12px; color: #c0cbbc; font-size: 10px; }
+    .ai-callout .button-secondary { position: relative; z-index: 1; min-height: 30px; font-size: 10px; }
+    .performance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .chart-wrap { padding: 16px; }
+    .chart-head { display: flex; align-items: start; justify-content: space-between; }
+    .chart-head h3 { margin: 0; font-size: 12px; }
+    .chart-head small { color: var(--muted); font-size: 9px; }
+    .chart-total { margin-top: 9px; font-size: 22px; font-weight: 750; }
+    .chart-total span { margin-left: 6px; color: var(--green); font-size: 10px; }
+    .chart { width: 100%; height: 130px; margin-top: 3px; overflow: visible; }
+    .chart text { fill: #778379; font-family: inherit; font-size: 9px; }
+    .chart .gridline { stroke: #2b352c; stroke-dasharray: 3 4; }
+    .chart .area { fill: url(#chartFill); }
+    .chart .line { fill: none; stroke: var(--green); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.5; }
+    .chart .dot { fill: var(--green); stroke: #172017; stroke-width: 2; }
+    .tipster-row { display: flex; align-items: center; gap: 10px; border-top: 1px solid #283229; padding: 11px 0; }
+    .tipster-row:first-of-type { margin-top: 10px; }
+    .tipster-row:last-of-type { padding-bottom: 0; }
+    .rank { width: 19px; color: #829083; text-align: center; font-size: 10px; font-weight: 700; }
+    .tipster-details { min-width: 0; flex: 1; }
+    .tipster-details strong { display: block; font-size: 10px; }
+    .tipster-details small { color: var(--muted); font-size: 9px; }
+    .tipster-row .tipster-rate { color: var(--green); font-size: 11px; font-weight: 700; }
+    .tipster-profile-form { display: grid; gap: 8px; margin-top: 13px; border-top: 1px solid #283229; padding-top: 12px; }
+    .tipster-profile-form[hidden] { display: none; }
+    .tipster-list { margin-top: 10px; }
+    .tipster-bio { margin: 4px 0 0; color: var(--muted); font-size: 9px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .notification-count { position: absolute; top: -5px; right: -5px; display: grid; min-width: 16px; height: 16px; place-items: center; border-radius: 999px; background: #e45858; color: white; padding: 0 4px; font-size: 9px; font-weight: 800; }
+    .notification-count[hidden], .auth-form[hidden], .message-list[hidden] { display: none; }
+    .inbox-unread-count { display: inline-grid; min-width: 16px; height: 16px; place-items: center; border-radius: 999px; background: #e45858; color: white; padding: 0 4px; font-size: 9px; vertical-align: middle; }
+    .inbox-unread-count[hidden] { display: none; }
+    .message-list { display: grid; gap: 9px; }
+    .admin-message { border: 1px solid #39443a; border-radius: 8px; background: #151b16; padding: 10px; }
+    .admin-message header { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 9px; }
+    .admin-message p { margin: 8px 0 0; color: var(--text); font-size: 11px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .admin-reply-form { display: grid; gap: 7px; margin-top: 10px; border-top: 1px solid #39443a; padding-top: 9px; }
+    .admin-reply-form textarea { min-height: 64px; }
+    .admin-reply-form button { justify-self: end; }
+    .admin-message-reply { margin-top: 9px; border-left: 2px solid var(--green); padding-left: 9px; }
+    .admin-message-reply strong { color: var(--green); font-size: 9px; }
+    .public-notification { border: 1px solid #39443a; border-radius: 8px; background: #151b16; padding: 11px; }
+    .public-notification + .public-notification { margin-top: 9px; }
+    .public-notification h3 { margin: 0; font-size: 12px; }
+    .public-notification time { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; }
+    .public-notification p { margin: 8px 0 0; color: var(--text); font-size: 11px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .announcement {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      border: 1px solid #453d2b;
+      border-radius: 11px;
+      background: #211f18;
+      padding: 12px 15px;
+    }
+    .announce-icon { display: grid; width: 31px; height: 31px; flex: 0 0 auto; place-items: center; border-radius: 9px; background: #332b1d; color: var(--orange); }
+    .announcement strong { display: block; font-size: 10px; }
+    .announcement p { margin: 2px 0 0; color: #9e9c8d; font-size: 10px; }
+    .announcement small { margin-left: auto; color: #777d70; font-size: 9px; white-space: nowrap; }
+    .footer { display: flex; justify-content: space-between; gap: 12px; margin-top: 29px; border-top: 1px solid var(--line); padding-top: 15px; color: #718073; font-size: 9px; }
+    .footer strong { color: #a7b1a6; font-weight: 600; }
+    .search {
+      width: min(250px, 29vw);
+      min-height: 35px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      outline: none;
+      background: var(--panel);
+      color: var(--text);
+      padding: 0 11px;
+      font-size: 10px;
+    }
+    .search:focus { border-color: #6b854e; }
+    .section-tools { display: flex; align-items: center; gap: 9px; }
+    .menu-button { display: none; }
+    .toast {
+      position: fixed;
+      right: 23px;
+      bottom: 23px;
+      z-index: 10;
+      max-width: min(340px, calc(100vw - 32px));
+      transform: translateY(12px);
+      border: 1px solid #43523d;
+      border-radius: 10px;
+      background: #222d21;
+      color: #e8f2e4;
+      padding: 11px 14px;
+      opacity: 0;
+      pointer-events: none;
+      font-size: 11px;
+      transition: opacity .2s, transform .2s;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    @media (max-width: 1080px) {
+      .sidebar { width: 205px; }
+      .main { margin-left: 205px; }
+      .page { padding-right: 23px; padding-left: 23px; }
+      .topbar { padding: 0 23px; }
+      .feature-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .content-grid { grid-template-columns: minmax(0, 1.4fr) minmax(245px, .9fr); }
+    }
+    @media (max-width: 780px) {
+      .sidebar { width: 66px; align-items: center; padding: 20px 8px 13px; }
+      .brand { padding: 0; }
+      .brand-copy, .nav-label, .nav-text, .nav-count, .responsible, .user-copy { display: none; }
+      .nav { width: 100%; margin-top: 26px; }
+      .nav a { justify-content: center; padding: 0; }
+      .nav-icon { font-size: 17px; }
+      .sidebar-bottom { display: grid; justify-items: center; }
+      .user-mini { padding: 0; }
+      .main { margin-left: 66px; }
+      .topbar { padding: 0 18px; }
+      .page { padding: 22px 18px 35px; }
+      .hero { min-height: 202px; padding: 24px; }
+      .hero-art { width: 140px; }
+      .hero-art .orb { font-size: 60px; }
+      .haven-logo-card { width: 165px; padding: 10px 12px 9px; }
+      .haven-logo-die { width: 60px; height: 53px; }
+      .haven-logo-odds { font-size: 12px; }
+      .haven-logo-word { font-size: 18px; }
+      .feature-hub { padding: 15px; }
+      .feature-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .content-grid { grid-template-columns: 1fr; }
+      .side-stack { grid-template-columns: 1fr 1fr; align-items: start; }
+      .section-tools { flex-wrap: wrap; justify-content: end; }
+    }
+    @media (max-width: 560px) {
+      .topbar { height: 58px; padding: 0 13px; }
+      .date-chip { display: none; }
+      .page { padding: 15px 12px 28px; }
+      .hero { min-height: 0; padding: 19px 17px; }
+      .hero-copy { max-width: none; }
+      .hero h1 { font-size: 27px; }
+      .hero-copy p { max-width: 300px; font-size: 11px; }
+      .hero-art { display: none; }
+      .hero-actions { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: 14px; }
+      .button-primary, .button-secondary, .button-whatsapp { width: 100%; min-height: 38px; padding: 0 10px; font-size: 10px; }
+      .feature-hub { padding: 13px; }
+      .feature-hub-heading { align-items: start; flex-wrap: wrap; }
+      .feature-hub-heading h2 { font-size: 16px; }
+      .feature-hub-heading p { max-width: 260px; font-size: 9px; }
+      .feature-hub-count { padding: 5px 6px; font-size: 7px; }
+      .motivation-banner { gap: 8px; padding: 9px; }
+      .motivation-aside { display: none; }
+      .motivation-copy p { font-size: 10px; }
+      .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+      .feature-card { min-height: 112px; padding: 9px; }
+      .feature-name { font-size: 9px; }
+      .stats-grid { gap: 8px; }
+      .stat-card { min-height: 87px; padding: 11px; }
+      .stat-value { font-size: 21px; }
+      .stat-note { font-size: 9px; }
+      .section { margin-top: 21px; }
+      .section-heading { align-items: start; }
+      .section-tools { gap: 5px; }
+      .search { width: 100%; min-height: 31px; }
+      #predictions .section-heading { flex-wrap: wrap; }
+      #predictions .section-tools { width: 100%; justify-content: space-between; }
+      #predictions .search { min-width: 0; }
+      .filter { padding: 0 8px; font-size: 9px; }
+      .panel-pad { padding: 12px; }
+      .pick { padding: 10px; }
+      .pick-bottom { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 9px; }
+      .pick-metrics { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 6px; }
+      .teams { flex-wrap: wrap; gap: 6px; font-size: 10px; }
+      .metric { font-size: 8px; }
+      .metric strong { font-size: 10px; }
+      .side-stack { grid-template-columns: 1fr; }
+      .performance-grid { grid-template-columns: 1fr; gap: 10px; }
+      .announcement { align-items: start; padding: 11px; }
+      .announcement small { display: none; }
+      .announcement > div { min-width: 0; overflow-wrap: anywhere; }
+      .footer { flex-direction: column; }
+      .sidebar {
+        inset: auto 0 0;
+        width: 100%;
+        height: calc(62px + env(safe-area-inset-bottom));
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        border-top: 1px solid var(--line);
+        border-right: 0;
+        background: rgb(19 25 20 / 97%);
+        padding: 5px 8px calc(5px + env(safe-area-inset-bottom));
+        backdrop-filter: blur(15px);
+      }
+      .sidebar > .brand,
+      .sidebar > .nav-label,
+      .sidebar > nav.nav:nth-of-type(2),
+      .sidebar > .sidebar-bottom { display: none; }
+      .sidebar > nav.nav:first-of-type {
+        display: flex;
+        width: 100%;
+        max-width: 440px;
+        align-items: center;
+        justify-content: space-around;
+        gap: 2px;
+        margin: 0;
+      }
+      .sidebar > nav.nav:first-of-type a {
+        display: grid;
+        min-width: 0;
+        min-height: 46px;
+        flex: 1 1 0;
+        justify-items: center;
+        align-content: center;
+        padding: 0;
+      }
+      .sidebar > nav.nav:first-of-type .nav-icon { width: auto; font-size: 16px; }
+      .main { margin-left: 0; padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
+      .topbar { padding: 0 12px; }
+    }
+    @media (max-width: 360px) {
+      .page { padding-right: 9px; padding-left: 9px; }
+      .hero { padding: 16px 13px; }
+      .hero h1 { font-size: 25px; }
+      .feature-hub { padding: 10px; }
+      .feature-grid { gap: 6px; }
+      .feature-card { min-height: 108px; padding: 8px; }
+      .feature-name { font-size: 8px; }
+      .feature-price { gap: 3px; padding-right: 61px; font-size: 7px; }
+      .feature-price strong { font-size: 11px; }
+      .book-feature { right: 7px; bottom: 7px; min-width: 55px; height: 27px; }
+      .panel-pad { padding: 10px; }
+      .pick { padding: 8px; }
+      .pick-metrics { gap: 4px; }
+      .metric { font-size: 7px; }
+      .metric strong { font-size: 9px; }
+      .teams { font-size: 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" class="svg-definitions" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <linearGradient id="havenMarkBlue" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#49a5e3"/>
+        <stop offset="1" stop-color="#1b5d8a"/>
+      </linearGradient>
+      <symbol id="odds-haven-mark" viewBox="0 0 100 100">
+        <rect width="100" height="100" rx="25" fill="url(#havenMarkBlue)"/>
+        <path d="M18 20 21 13l3 7 7 3-7 3-3 7-3-7-7-3zm58 5 3-8 3 8 8 3-8 3-3 8-3-8-8-3zm-57 48 3-8 3 8 8 3-8 3-3 8-3-8-8-3zm54 0 2.5-6 2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5z" fill="#ffda43"/>
+        <path d="m50 24 25 25-25 27-25-27z" fill="#f6f7f2" stroke="#253c50" stroke-width="4"/>
+        <circle cx="50" cy="42" r="5" fill="#ee7375"/>
+        <circle cx="50" cy="58" r="5" fill="#f5c75c"/>
+      </symbol>
+    </defs>
+  </svg>
+  <div class="app">
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#home" aria-label="OddsHaven home">
+        <span class="brand-mark"><svg aria-hidden="true"><use href="#odds-haven-mark"></use></svg></span>
+        <span class="brand-copy"><span class="brand-name">ODDS<span>HAVEN</span></span><span class="brand-caption">Football intelligence</span></span>
+      </a>
+      <div class="nav-label">Workspace</div>
+      <nav class="nav">
+        <a class="active" href="#home" aria-label="Overview"><span class="nav-icon"><i class="fa-solid fa-house" aria-hidden="true"></i></span><span class="nav-text">Overview</span></a>
+        <a href="#predictions" aria-label="Predictions"><span class="nav-icon"><i class="fa-solid fa-bullseye" aria-hidden="true"></i></span><span class="nav-text">Predictions</span><span class="nav-count" id="prediction-count">0</span></a>
+        <a href="#live" aria-label="Live matches"><span class="nav-icon"><i class="fa-solid fa-futbol" aria-hidden="true"></i></span><span class="nav-text">Live matches</span><span class="nav-count">0</span></a>
+        <a href="#performance" aria-label="Statistics"><span class="nav-icon"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span><span class="nav-text">Statistics</span></a>
+        <a href="#tipsters" aria-label="Tipsters"><span class="nav-icon"><i class="fa-solid fa-ranking-star" aria-hidden="true"></i></span><span class="nav-text">Tipsters</span></a>
+        <a href="#announcements" aria-label="Announcements"><span class="nav-icon"><i class="fa-solid fa-bell" aria-hidden="true"></i></span><span class="nav-text">Announcements</span></a>
+      </nav>
+      <div class="nav-label">Your account</div>
+      <nav class="nav">
+        <a href="#predictions" data-action="saved"><span class="nav-icon"><i class="fa-solid fa-star" aria-hidden="true"></i></span><span class="nav-text">Saved picks</span><span class="nav-count" id="saved-count">0</span></a>
+        <a href="#my-slip" data-action="slip"><span class="nav-icon"><i class="fa-solid fa-ticket" aria-hidden="true"></i></span><span class="nav-text">My slip</span><span class="nav-count" id="slip-count">0</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="responsible">
+          <strong>Play it smart.</strong>
+          <p>Predictions are for information only. Please gamble responsibly.</p>
+          <a href="#responsible">Learn more ↗</a>
+        </div>
+        <div class="user-mini">
+          <span class="avatar" id="sidebar-user-avatar">OH</span>
+          <span class="user-copy"><strong id="sidebar-user-name">Guest account</strong><small id="sidebar-user-status">Preview mode</small></span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main" id="home">
+      <header class="topbar">
+        <div class="breadcrumb">Workspace <span aria-hidden="true">/</span> <strong>Overview</strong></div>
+        <div class="top-actions">
+          <span class="date-chip"><i class="fa-solid fa-calendar-day" aria-hidden="true"></i> &nbsp;<span id="today"></span></span>
+          <button class="icon-button" type="button" aria-label="Admin notifications" title="Admin notifications" id="notify-button" style="position:relative"><i class="fa-solid fa-bell" aria-hidden="true"></i><span class="notification-count" id="notification-count" hidden></span></button>
+          <button class="icon-button" type="button" aria-label="Guest account login" title="Guest account" id="account-open"><i class="fa-solid fa-user" aria-hidden="true"></i></button>
+            <button class="icon-button admin-button" type="button" aria-label="Open admin login" title="Admin login" id="admin-open"><i class="fa-solid fa-user-shield" aria-hidden="true"></i></button>
+            <span class="avatar" aria-label="OddsHaven guest" id="user-avatar">OH</span>
+        </div>
+      </header>
+
+      <div class="page">
+        <section class="hero" aria-labelledby="welcome-title">
+          <div class="hero-copy">
+            <div class="eyebrow">Your football intelligence hub</div>
+            <h1 id="welcome-title">See the game<br><span>from every angle.</span></h1>
+            <p>Thoughtful match analysis, transparent performance tracking, and today's picks — all in one place.</p>
+            <div class="hero-actions">
+              <a class="button-primary" href="#predictions">Explore today's picks &nbsp;→</a>
+              <a class="button-secondary" href="#performance">View track record</a>
+              <a class="button-whatsapp" href="https://chat.whatsapp.com/DSr2KRCfULP5zX6u49ASmE" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Join OddsHaven Group</a>
+            </div>
+          </div>
+          <div class="hero-art" aria-label="OddsHaven logo inspired by the shared blue, star and dice artwork">
+            <div class="haven-logo-card">
+              <svg class="haven-logo-die" aria-hidden="true"><use href="#odds-haven-mark"></use></svg>
+              <div class="haven-logo-odds"><span>10x Odds</span><span>5 Odds</span></div>
+              <div class="haven-logo-word">OddsHaven</div>
+              <div class="haven-logo-note">INSIGHT OVER INSTINCT</div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="section motivation-banner" aria-label="OddsHaven motivation">
+          <span class="motivation-icon"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></span>
+          <div class="motivation-copy"><div class="motivation-label">A matchday reminder</div><p>Stay curious. Study the game. Let the numbers inform, not decide.</p></div>
+          <span class="motivation-aside">Good analysis starts with a clear head.</span>
+        </aside>
+
+        <section class="section feature-hub" id="features" aria-labelledby="features-title">
+          <div class="feature-hub-heading">
+            <div><div class="eyebrow"><i class="fa-solid fa-bullseye" aria-hidden="true"></i> &nbsp;The OddsHaven marketplace</div><h2 id="features-title">Everything you need, at a glance.</h2><p>Explore prediction types, match insights, and tools. Active features open their demo; upcoming features are marked.</p></div>
+            <span class="feature-hub-count"><i class="fa-solid fa-futbol" aria-hidden="true"></i> &nbsp;FOOTBALL · 20 FEATURES</span>
+          </div>
+          <div class="feature-grid" aria-label="OddsHaven main features">
+            <button class="feature-card" type="button" data-feature="marketplace"><span class="feature-icon-box"><i class="fa-solid fa-bullseye" aria-hidden="true"></i></span><span class="feature-name">Prediction Marketplace</span><span class="feature-description">Browse all match picks</span></button>
+            <div class="feature-card priced-feature"><button class="feature-card-action" type="button" data-feature="vip"><span class="feature-icon-box"><i class="fa-solid fa-crown" aria-hidden="true"></i></span><span class="feature-name">VIP Ticket</span><span class="feature-description">Curated match picks</span></button><span class="feature-price">Affordable price <strong>KSh 150</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20the%20VIP%20Ticket%20for%20KSh%20150." target="_blank" rel="noopener noreferrer" aria-label="Book VIP Ticket on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book VIP Ticket on WhatsApp</span></a></div>
+            <div class="feature-card priced-feature" data-coming-soon><button class="feature-card-action" type="button" disabled title="Coming soon — sample picks are not available"><span class="feature-icon-box"><i class="fa-solid fa-trophy" aria-hidden="true"></i></span><span class="feature-name">Mega Jackpot</span><span class="feature-description">Multi-match ticket</span></button><span class="feature-price">Affordable price <strong>KSh 200</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20the%20Mega%20Jackpot%20for%20KSh%20200." target="_blank" rel="noopener noreferrer" aria-label="Book Mega Jackpot on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book Mega Jackpot on WhatsApp</span></a></div>
+            <div class="feature-card priced-feature" data-coming-soon><button class="feature-card-action" type="button" disabled title="Coming soon — sample picks are not available"><span class="feature-icon-box"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><span class="feature-name">Fixed Odds</span><span class="feature-description">Odds-focused picks</span></button><span class="feature-price">Affordable price <strong>KSh 100</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20Fixed%20Odds%20for%20KSh%20100." target="_blank" rel="noopener noreferrer" aria-label="Book Fixed Odds on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book Fixed Odds on WhatsApp</span></a></div>
+            <div class="feature-card priced-feature" data-coming-soon><button class="feature-card-action" type="button" disabled title="Coming soon — sample picks are not available"><span class="feature-icon-box"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span><span class="feature-name">Super Odds</span><span class="feature-description">Special market picks</span></button><span class="feature-price">Affordable price <strong>KSh 80</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20Super%20Odds%20for%20KSh%2080." target="_blank" rel="noopener noreferrer" aria-label="Book Super Odds on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book Super Odds on WhatsApp</span></a></div>
+            <div class="feature-card priced-feature" data-coming-soon><button class="feature-card-action" type="button" disabled title="Coming soon — sample picks are not available"><span class="feature-icon-box"><i class="fa-solid fa-rotate" aria-hidden="true"></i></span><span class="feature-name">Recovery</span><span class="feature-description">Strategy insights</span></button><span class="feature-price">Affordable price <strong>KSh 100</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20Recovery%20for%20KSh%20100." target="_blank" rel="noopener noreferrer" aria-label="Book Recovery on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book Recovery on WhatsApp</span></a></div>
+            <div class="feature-card priced-feature"><button class="feature-card-action" type="button" data-feature="daily"><span class="feature-icon-box"><i class="fa-solid fa-calendar-day" aria-hidden="true"></i></span><span class="feature-name">Daily Odds</span><span class="feature-description">Today's match picks</span></button><span class="feature-price">Affordable price <strong>KSh 50</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20Daily%20Odds%20for%20KSh%2050." target="_blank" rel="noopener noreferrer" aria-label="Book Daily Odds on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book Daily Odds on WhatsApp</span></a></div>
+            <div class="feature-card priced-feature" data-coming-soon><button class="feature-card-action" type="button" disabled title="Coming soon — sample picks are not available"><span class="feature-icon-box"><i class="fa-solid fa-calendar-week" aria-hidden="true"></i></span><span class="feature-name">Weekly DM</span><span class="feature-description">Weekly selections</span></button><span class="feature-price">Affordable price <strong>KSh 250</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20Weekly%20DM%20for%20KSh%20250." target="_blank" rel="noopener noreferrer" aria-label="Book Weekly DM on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book Weekly DM on WhatsApp</span></a></div>
+            <div class="feature-card priced-feature" data-coming-soon><button class="feature-card-action" type="button" disabled title="Coming soon — sample picks are not available"><span class="feature-icon-box"><i class="fa-solid fa-fire" aria-hidden="true"></i></span><span class="feature-name">Hot Picks</span><span class="feature-description">Popular match picks</span></button><span class="feature-price">Affordable price <strong>KSh 150</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20Hot%20Picks%20for%20KSh%20150." target="_blank" rel="noopener noreferrer" aria-label="Book Hot Picks on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book Hot Picks on WhatsApp</span></a></div>
+            <button class="feature-card" type="button" data-feature="featured"><span class="feature-icon-box"><i class="fa-solid fa-star" aria-hidden="true"></i></span><span class="feature-name">Featured</span><span class="feature-description">Browse today's picks</span></button>
+            <div class="feature-card priced-feature"><button class="feature-card-action" type="button" data-feature="ai"><span class="feature-icon-box"><i class="fa-solid fa-robot" aria-hidden="true"></i></span><span class="feature-name">AI Predictions</span><span class="feature-description">Sample match analysis</span></button><span class="feature-price">Affordable price <strong>KSh 100</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20AI%20Predictions%20for%20KSh%20100." target="_blank" rel="noopener noreferrer" aria-label="Book AI Predictions on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book AI Predictions on WhatsApp</span></a></div>
+            <button class="feature-card" type="button" data-feature="statistics"><span class="feature-icon-box"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span><span class="feature-name">Statistics</span><span class="feature-description">Transparent track record</span></button>
+            <button class="feature-card" type="button" data-feature="winning"><span class="feature-icon-box"><i class="fa-solid fa-trophy" aria-hidden="true"></i></span><span class="feature-name">Winning Predictions</span><span class="feature-description">Season results breakdown</span></button>
+            <button class="feature-card" type="button" data-feature="football"><span class="feature-icon-box"><i class="fa-solid fa-futbol" aria-hidden="true"></i></span><span class="feature-name">Football</span><span class="feature-description">Match center preview</span></button>
+            <button class="feature-card" type="button" data-feature="ticket"><span class="feature-icon-box"><i class="fa-solid fa-ticket" aria-hidden="true"></i></span><span class="feature-name">Prediction Ticket</span><span class="feature-description">Build My slip</span></button>
+            <div class="feature-card priced-feature" data-coming-soon><button class="feature-card-action" type="button" disabled title="Premium access is not enabled in this demo"><span class="feature-icon-box"><i class="fa-solid fa-gem" aria-hidden="true"></i></span><span class="feature-name">Premium Package</span><span class="feature-description">Membership access</span></button><span class="feature-price">Affordable price <strong>KSh 300</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20the%20Premium%20Package%20for%20KSh%20300." target="_blank" rel="noopener noreferrer" aria-label="Book Premium Package on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book Premium Package on WhatsApp</span></a></div>
+            <div class="feature-card priced-feature"><button class="feature-card-action" type="button" data-feature="confidence"><span class="feature-icon-box"><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i></span><span class="feature-name">High Confidence</span><span class="feature-description">Filter picks by rating</span></button><span class="feature-price">Affordable price <strong>KSh 1,000</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20High%20Confidence%20for%20KSh%201%2C000." target="_blank" rel="noopener noreferrer" aria-label="Book High Confidence on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book High Confidence on WhatsApp</span></a></div>
+            <div class="feature-card priced-feature"><button class="feature-card-action" type="button" data-feature="low-risk"><span class="feature-icon-box"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span><span class="feature-name">Low Risk</span><span class="feature-description">Browse lower-risk picks</span></button><span class="feature-price">Affordable price <strong>KSh 500</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20Low%20Risk%20for%20KSh%20500." target="_blank" rel="noopener noreferrer" aria-label="Book Low Risk on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book Low Risk on WhatsApp</span></a></div>
+            <div class="feature-card priced-feature"><button class="feature-card-action" type="button" data-feature="medium-risk"><span class="feature-icon-box"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span><span class="feature-name">Medium Risk</span><span class="feature-description">Browse medium-risk picks</span></button><span class="feature-price">Affordable price <strong>KSh 750</strong></span><a class="book-feature" href="https://wa.me/254712640039?text=Hello%20OddsHaven%2C%20I%20want%20to%20book%20Medium%20Risk%20for%20KSh%20750." target="_blank" rel="noopener noreferrer" aria-label="Book Medium Risk on WhatsApp"><i class="fa-solid fa-book" aria-hidden="true"></i><span class="book-feature-label">Book Medium Risk on WhatsApp</span></a></div>
+            <button class="feature-card" type="button" data-feature="alerts"><span class="feature-icon-box"><i class="fa-solid fa-bell" aria-hidden="true"></i></span><span class="feature-name">Alerts</span><span class="feature-description">Notification preview</span></button>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="stats-title">
+          <div class="section-heading">
+            <div><div class="eyebrow">The numbers, at a glance</div><h2 id="stats-title">Platform performance</h2></div>
+            <span class="section-subtitle">Sample season data · updated today</span>
+          </div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-top"><span>Tracked predictions</span><span class="stat-icon">◎</span></div><div class="stat-value">248 <span class="stat-change">+12 this week</span></div><div class="stat-note">Across all markets this season</div></article>
+            <article class="stat-card"><div class="stat-top"><span>Winning predictions</span><span class="stat-icon"><i class="fa-solid fa-trophy" aria-hidden="true"></i></span></div><div class="stat-value">164 <span class="stat-change">66.1%</span></div><div class="stat-note">Of 248 tracked predictions</div></article>
+            <article class="stat-card"><div class="stat-top"><span>Currently pending</span><span class="stat-icon">◷</span></div><div class="stat-value">18 <span class="stat-change">In play / upcoming</span></div><div class="stat-note">Results not yet recorded</div></article>
+            <article class="stat-card"><div class="stat-top"><span>Average odds</span><span class="stat-icon">⌁</span></div><div class="stat-value">1.92 <span class="stat-change">Tracked picks</span></div><div class="stat-note">Historical sample average</div></article>
+          </div>
+        </section>
+
+        <div class="content-grid section">
+          <section id="predictions" class="panel panel-pad" aria-labelledby="picks-title">
+            <div class="section-heading">
+              <div><div class="eyebrow">Published by OddsHaven</div><h2 id="picks-title">Today's predictions</h2></div>
+              <div class="section-tools"><input class="search" id="search-picks" type="search" placeholder="Search teams or leagues..." aria-label="Search predictions"></div>
+            </div>
+            <p class="risk-tier-note">Pick access by risk: <strong>Low KSh 500</strong> · <strong>Medium KSh 750</strong> · <strong>High KSh 1,000</strong>. Illustrative marketplace prices.</p>
+            <div class="filter-bar" role="group" aria-label="Filter predictions by category">
+              <button class="filter active" type="button" data-filter="All"><i class="fa-solid fa-bullseye feature-icon" aria-hidden="true"></i>All picks</button>
+              <button class="filter" type="button" data-filter="Daily Odds"><i class="fa-solid fa-calendar-day feature-icon" aria-hidden="true"></i>Daily odds</button>
+              <button class="filter" type="button" data-filter="VIP"><i class="fa-solid fa-crown feature-icon" aria-hidden="true"></i>VIP</button>
+              <button class="filter" type="button" data-filter="Correct Score"><i class="fa-solid fa-trophy feature-icon" aria-hidden="true"></i>Correct score</button>
+              <button class="filter" type="button" data-filter="BTTS"><i class="fa-solid fa-futbol feature-icon" aria-hidden="true"></i>BTTS</button>
+              <button class="filter" type="button" data-filter="Over/Under"><i class="fa-solid fa-arrow-trend-up feature-icon" aria-hidden="true"></i>Over / under</button>
+              <button class="filter" type="button" data-filter="Double Chance"><i class="fa-solid fa-shield-halved feature-icon" aria-hidden="true"></i>Double chance</button>
+            </div>
+            <div class="pick-list" id="pick-list" aria-live="polite"></div>
+          </section>
+
+          <div class="side-stack">
+            <section class="panel panel-pad" id="my-slip" aria-labelledby="my-slip-title">
+              <div class="live-header"><span class="live-title" id="my-slip-title">My slip</span><span class="nav-count" id="slip-total-count">0 picks</span></div>
+              <div class="my-slip-list" id="my-slip-list" aria-live="polite"></div>
+              <div class="my-slip-total"><span>Total listed price</span><strong id="my-slip-total">KSh 0</strong></div>
+              <button class="button-whatsapp my-slip-submit" id="submit-slip" type="button" disabled><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Submit slip on WhatsApp</button>
+              <p class="my-slip-note">Opens a WhatsApp message to OddsHaven. Review and send it in WhatsApp to submit.</p>
+            </section>
+            <section class="panel panel-pad" id="live" aria-labelledby="live-title">
+              <div class="live-header"><span class="live-title" id="live-title">Match center</span></div>
+              <div class="empty-state">Live fixtures will appear here when a match-data feed is connected.</div>
+            </section>
+            <section class="ai-callout" id="analysis" aria-label="AI match analysis">
+              <div class="ai-title"><i class="fa-solid fa-robot" aria-hidden="true"></i> &nbsp;AI ANALYSIS · DEMO</div>
+              <p>Explore a sample match breakdown with form, head-to-head context, and model confidence.</p>
+              <button class="button-secondary" type="button" id="analysis-button">Explore AI insights &nbsp;→</button>
+            </section>
+            <section class="panel panel-pad" id="tipsters" aria-labelledby="tipsters-title">
+              <div class="section-heading" style="margin-bottom:0"><div><div class="eyebrow">Community</div><h2 id="tipsters-title">Tipster profiles</h2></div><span class="section-subtitle" id="tipster-account-status">Guest account required</span></div>
+              <p style="margin:7px 0 0;color:var(--muted);font-size:9px">Browse profiles in preview mode. Create a community account to publish and update your own profile.</p>
+              <div class="tipster-list" id="tipster-list"><div class="empty-state">Loading tipster profiles…</div></div>
+              <form class="tipster-profile-form" id="tipster-profile-form" hidden>
+                <label class="admin-feature-name">Display name<input class="admin-input" id="tipster-display-name" type="text" maxlength="60" required></label>
+                <label class="admin-feature-name">Specialty<input class="admin-input" id="tipster-specialty" type="text" maxlength="80" placeholder="e.g. Premier League analysis" required></label>
+                <label class="admin-feature-name">About you<textarea class="admin-input" id="tipster-bio" maxlength="500" placeholder="A short profile introduction"></textarea></label>
+                <button class="button-primary admin-save" type="submit"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Publish / update profile</button>
+              </form>
+              <button class="button-secondary" id="guest-message-admin" type="button" style="margin-top:10px;position:relative" hidden><i class="fa-solid fa-envelope" aria-hidden="true"></i> Message admin privately<span class="notification-count" id="guest-reply-count" hidden></span></button>
+              <button class="button-secondary" id="tipster-login-cta" type="button" style="margin-top:10px">Log in / create community account</button>
+            </section>
+          </div>
+        </div>
+
+        <section class="section" id="performance" aria-labelledby="performance-title">
+          <div class="section-heading"><div><div class="eyebrow">Honest, verifiable, ongoing</div><h2 id="performance-title">Track record &amp; insights</h2></div><span class="section-subtitle">Illustrative demo metrics</span></div>
+          <div class="performance-grid">
+            <article class="panel chart-wrap">
+              <div class="chart-head"><div><h3>Monthly win rate</h3><small>Settled predictions · sample season</small></div><span class="category-tag">2026</span></div>
+              <div class="chart-total">66.1% <span>↑ 4.2% vs. last period</span></div>
+              <svg class="chart" viewBox="0 0 520 145" role="img" aria-label="Illustrative monthly win rate chart: January 58 percent, February 64 percent, March 61 percent, April 72 percent, May 66 percent, June 69 percent">
+                <defs><linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#c1f36c" stop-opacity=".19"/><stop offset="1" stop-color="#c1f36c" stop-opacity="0"/></linearGradient></defs>
+                <line class="gridline" x1="35" y1="26" x2="510" y2="26"/><line class="gridline" x1="35" y1="62" x2="510" y2="62"/><line class="gridline" x1="35" y1="98" x2="510" y2="98"/>
+                <text x="2" y="29">80%</text><text x="2" y="65">60%</text><text x="2" y="101">40%</text>
+                <path class="area" d="M45 91 L135 72 L225 81 L315 49 L405 60 L495 53 L495 116 L45 116 Z"/>
+                <path class="line" d="M45 91 L135 72 L225 81 L315 49 L405 60 L495 53"/>
+                <circle class="dot" cx="45" cy="91" r="4"/><circle class="dot" cx="135" cy="72" r="4"/><circle class="dot" cx="225" cy="81" r="4"/><circle class="dot" cx="315" cy="49" r="4"/><circle class="dot" cx="405" cy="60" r="4"/><circle class="dot" cx="495" cy="53" r="4"/>
+                <text x="34" y="135">Jan</text><text x="124" y="135">Feb</text><text x="214" y="135">Mar</text><text x="304" y="135">Apr</text><text x="394" y="135">May</text><text x="484" y="135">Jun</text>
+              </svg>
+            </article>
+            <article class="panel chart-wrap">
+              <div class="chart-head"><div><h3>Results breakdown</h3><small>248 total predictions · demo dataset</small></div><span class="category-tag">Season</span></div>
+              <div style="display:grid;grid-template-columns:135px 1fr;align-items:center;gap:16px;margin-top:13px">
+                <svg viewBox="0 0 120 120" role="img" aria-label="Results: 164 won, 66 lost, 18 pending">
+                  <circle cx="60" cy="60" r="44" fill="none" stroke="#313b32" stroke-width="13"/>
+                  <circle cx="60" cy="60" r="44" fill="none" stroke="#c1f36c" stroke-width="13" stroke-dasharray="183 276" transform="rotate(-90 60 60)"/>
+                  <circle cx="60" cy="60" r="44" fill="none" stroke="#ff7777" stroke-width="13" stroke-dasharray="74 276" stroke-dashoffset="-186" transform="rotate(-90 60 60)"/>
+                  <text x="60" y="57" text-anchor="middle" style="fill:#eff4ed;font-size:21px;font-weight:700">66%</text>
+                  <text x="60" y="73" text-anchor="middle" style="fill:#89958b;font-size:8px">WIN RATE</text>
+                </svg>
+                <div style="display:grid;gap:13px;font-size:10px">
+                  <div style="display:flex;justify-content:space-between"><span style="color:#a6b0a6"><span style="color:#c1f36c">●</span> &nbsp;Won</span><strong>164 <span style="color:#7f8b80;font-weight:400">66.1%</span></strong></div>
+                  <div style="display:flex;justify-content:space-between"><span style="color:#a6b0a6"><span style="color:#ff7777">●</span> &nbsp;Lost</span><strong>66 <span style="color:#7f8b80;font-weight:400">26.6%</span></strong></div>
+                  <div style="display:flex;justify-content:space-between"><span style="color:#a6b0a6"><span style="color:#69776c">●</span> &nbsp;Pending</span><strong>18 <span style="color:#7f8b80;font-weight:400">7.3%</span></strong></div>
+                </div>
+              </div>
+              <p style="margin:6px 0 0;color:#7f8b80;font-size:9px">Historical results don't guarantee future outcomes.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="announcements" aria-labelledby="announcement-title">
+          <div class="section-heading"><div><div class="eyebrow">From the OddsHaven team</div><h2 id="announcement-title">Latest announcement</h2></div></div>
+          <div class="announcement"><span class="announce-icon">✦</span><div><strong>Welcome to OddsHaven — your matchday, with more context.</strong><p>Explore sample predictions, see how performance is tracked, and make informed decisions. This preview uses illustrative data, not live advice.</p></div><small>Product update</small></div>
+        </section>
+
+        <footer class="footer" id="responsible"><span><strong>OddsHaven</strong> · Analysis and predictions are informational, not guarantees of outcomes.</span><span>Demo preview · No betting, payment, or live-data services are connected.</span></footer>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
+    <div class="auth-content">
+      <header class="auth-heading">
+        <div><div class="eyebrow"><i class="fa-solid fa-user-shield" aria-hidden="true"></i> &nbsp;Admin access</div><h2 id="auth-title">Secure login</h2><p>Use the built-in admin account to manage OddsHaven.</p></div>
+        <button class="icon-button admin-dialog-close" id="auth-close" type="button" aria-label="Close admin login"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      </header>
+      <form class="auth-form" id="auth-form">
+        <label class="admin-feature-name">Username<input class="admin-input" id="login-username" name="username" type="text" autocomplete="username" required></label>
+        <label class="admin-feature-name">Password<input class="admin-input" id="login-password" name="password" type="password" autocomplete="current-password" required></label>
+        <button class="button-primary admin-save" type="submit"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Login to admin</button>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog class="auth-dialog" id="guest-auth-dialog" aria-labelledby="guest-auth-title">
+    <div class="auth-content">
+      <header class="auth-heading">
+        <div><div class="eyebrow"><i class="fa-solid fa-user" aria-hidden="true"></i> &nbsp;Community account</div><h2 id="guest-auth-title">Guest login</h2><p>Log in or create an account to publish a tipster profile and message admin.</p></div>
+        <button class="icon-button admin-dialog-close" id="guest-auth-close" type="button" aria-label="Close guest account login"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      </header>
+      <form class="auth-form" id="guest-auth-form">
+        <label class="admin-feature-name">Username<input class="admin-input" id="guest-username" name="username" type="text" minlength="3" maxlength="32" autocomplete="username" required></label>
+        <label class="admin-feature-name">Password<input class="admin-input" id="guest-password" name="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" required></label>
+        <div class="admin-form-actions">
+          <button class="button-secondary" id="guest-register" type="button">Create community account</button>
+          <button class="button-primary admin-save" type="submit">Log in</button>
+        </div>
+        <button class="button-secondary" id="guest-preview" type="button">Continue in preview mode</button>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog class="auth-dialog" id="messages-dialog" aria-labelledby="messages-title">
+    <div class="auth-content">
+      <header class="auth-heading">
+        <div><div class="eyebrow"><i class="fa-solid fa-envelope" aria-hidden="true"></i> &nbsp;Private messages</div><h2 id="messages-title">Message admin</h2><p id="messages-description">Your message is only visible to the admin.</p></div>
+        <button class="icon-button admin-dialog-close" id="messages-close" type="button" aria-label="Close messages"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      </header>
+      <form class="auth-form" id="admin-message-form">
+        <label class="admin-feature-name">Message<textarea class="admin-input" id="admin-message-text" maxlength="2000" required></textarea></label>
+        <button class="button-primary admin-save" type="submit"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send privately</button>
+      </form>
+      <div class="message-list" id="admin-message-list" hidden></div>
+    </div>
+  </dialog>
+
+  <dialog class="auth-dialog" id="notifications-dialog" aria-labelledby="notifications-title">
+    <div class="auth-content">
+      <header class="auth-heading">
+        <div><div class="eyebrow"><i class="fa-solid fa-bell" aria-hidden="true"></i> &nbsp;OddsHaven updates</div><h2 id="notifications-title">Admin notifications</h2><p>Updates published by the OddsHaven admin.</p></div>
+        <button class="icon-button admin-dialog-close" id="notifications-close" type="button" aria-label="Close notifications"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      </header>
+      <div class="message-list" id="notifications-list"><div class="empty-state">Loading notifications…</div></div>
+    </div>
+  </dialog>
+
+  <dialog class="admin-dialog" id="admin-dialog" aria-labelledby="admin-title">
+    <div class="admin-content">
+      <header class="admin-header">
+        <div><div class="eyebrow"><i class="fa-solid fa-user-shield" aria-hidden="true"></i> &nbsp;OddsHaven controls</div><h2 id="admin-title">Admin management</h2><p>Manage today's fixtures, results, prices, announcements, and your admin account.</p></div>
+        <div class="admin-header-actions">
+          <button class="button-secondary admin-prediction-action" id="admin-logout" type="button"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log out</button>
+          <button class="icon-button admin-dialog-close" id="admin-close" type="button" aria-label="Close admin management"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        </div>
+      </header>
+      <div class="admin-notice"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Admin changes are saved to the SQLite database and protected by session-based authentication.</div>
+      <section class="admin-section command-center" id="admin-command-center" aria-labelledby="command-center-title">
+        <div class="command-center-heading">
+          <div><h3 id="command-center-title">OddsHaven Command Center</h3><p>Live overview of community, predictions, inbox, and database health.</p></div>
+          <button class="button-secondary admin-prediction-action" id="command-center-refresh" type="button"><i class="fa-solid fa-rotate" aria-hidden="true"></i> Refresh</button>
+        </div>
+        <div class="command-center-metrics" id="command-center-metrics" aria-live="polite">
+          <div class="command-center-metric"><span>Customers</span><strong id="command-customer-count">—</strong></div>
+          <div class="command-center-metric"><span>Predictions</span><strong id="command-prediction-count">—</strong></div>
+          <div class="command-center-metric"><span>Pending results</span><strong id="command-pending-count">—</strong></div>
+          <div class="command-center-metric"><span>Unread messages</span><strong id="command-unread-count">—</strong></div>
+          <div class="command-center-metric"><span>Win rate · settled</span><strong id="command-win-rate">—</strong></div>
+          <div class="command-center-metric"><span>Wins / losses / void</span><strong id="command-results">—</strong></div>
+          <div class="command-center-metric"><span>Tipsters</span><strong id="command-tipster-count">—</strong></div>
+          <div class="command-center-metric"><span>Unread guest replies</span><strong id="command-unread-replies">—</strong></div>
+        </div>
+        <div class="command-center-actions" aria-label="Command center shortcuts">
+          <button class="button-secondary admin-prediction-action" type="button" data-admin-jump="admin-customers">Customers</button>
+          <button class="button-secondary admin-prediction-action" type="button" data-admin-jump="admin-predictions-section">Predictions &amp; results</button>
+          <button class="button-secondary admin-prediction-action" type="button" data-admin-jump="admin-inbox-section">Messages &amp; support</button>
+          <button class="button-secondary admin-prediction-action" type="button" data-admin-jump="admin-risk-pricing-form">Analytics &amp; pricing</button>
+        </div>
+        <div class="command-center-monitor" id="command-center-monitor" aria-live="polite">
+          <span>Server: <strong id="command-server-status">Checking…</strong></span>
+          <span>Database: <strong id="command-database-status">Checking…</strong></span>
+          <span>Updated: <time id="command-updated-at">—</time></span>
+        </div>
+      </section>
+      <section class="admin-section" id="admin-customers" aria-labelledby="admin-customers-title">
+        <div class="admin-prediction-heading">
+          <div><h3 id="admin-customers-title">Community customers</h3><p>Guest accounts and their public tipster profile and message totals.</p></div>
+          <button class="button-secondary admin-prediction-action" id="admin-customers-refresh" type="button"><i class="fa-solid fa-rotate" aria-hidden="true"></i> Refresh</button>
+        </div>
+        <div class="admin-customer-list" id="admin-customer-list"><div class="empty-state">Loading community accounts…</div></div>
+      </section>
+      <section class="admin-section" id="admin-inbox-section" aria-labelledby="admin-inbox-title">
+        <div class="admin-prediction-heading">
+          <div><h3 id="admin-inbox-title">Private message inbox <span class="inbox-unread-count" id="admin-inbox-count" hidden></span></h3><p>Messages from guests are private and only visible to admins.</p></div>
+          <button class="button-secondary admin-prediction-action" id="admin-inbox-refresh" type="button"><i class="fa-solid fa-rotate" aria-hidden="true"></i> Refresh</button>
+        </div>
+        <div class="message-list" id="admin-inbox-list"><div class="empty-state">Loading private messages…</div></div>
+      </section>
+      <section class="admin-section" aria-labelledby="admin-notifications-title">
+        <h3 id="admin-notifications-title">Publish notifications</h3>
+        <p>Notifications you publish here appear to everyone when they click the bell.</p>
+        <form class="admin-announcement-form" id="admin-notification-form">
+          <label class="admin-feature-name" for="admin-notification-title">Title</label>
+          <input class="admin-input" id="admin-notification-title" type="text" maxlength="120" required>
+          <label class="admin-feature-name" for="admin-notification-body">Message</label>
+          <textarea class="admin-input" id="admin-notification-body" maxlength="2000" required></textarea>
+          <button class="button-primary admin-save" type="submit"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Publish notification</button>
+        </form>
+        <div class="message-list" id="admin-notification-list" style="margin-top:10px"><div class="empty-state">Loading notifications…</div></div>
+      </section>
+      <section class="admin-section" id="admin-predictions-section" aria-labelledby="admin-predictions-title">
+      <div class="admin-prediction-heading"><h3 id="admin-predictions-title">Today's predictions</h3><button class="admin-inline-action admin-prediction-add-link" id="admin-add-prediction" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Add prediction</button></div>
+      <p>Add one match or enter several matches and publish them together. Super Odds matches submitted together share one package price.</p>
+      <div class="admin-prediction-list" id="admin-prediction-list"></div>
+      <form class="admin-prediction-form" id="admin-prediction-form">
+        <input type="hidden" id="admin-prediction-id">
+        <div class="admin-batch-heading"><strong>Matches</strong><button class="button-secondary admin-prediction-action" id="admin-add-match" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Add another match</button></div>
+        <div class="admin-match-rows" id="admin-match-rows">
+          <div class="admin-match-row">
+            <label class="admin-feature-name">Home team<input class="admin-input" name="home" type="text" maxlength="60" required></label>
+            <label class="admin-feature-name">Away team<input class="admin-input" name="away" type="text" maxlength="60" required></label>
+            <label class="admin-feature-name">League / competition<input class="admin-input" name="league" type="text" maxlength="80" required></label>
+            <label class="admin-feature-name">Kickoff / match time<input class="admin-input" name="kickoff" type="text" placeholder="e.g. Today · 18:30" maxlength="40" required></label>
+          </div>
+        </div>
+        <label class="admin-feature-name">Category
+          <select class="admin-input" name="category" required>
+            <option value="Daily Odds">Daily Odds</option><option value="VIP">VIP</option><option value="Super Odds">Super Odds (one package for all matches)</option><option value="Over/Under">Over/Under</option><option value="Double Chance">Double Chance</option><option value="Correct Score">Correct Score</option><option value="BTTS">BTTS</option>
+          </select>
+        </label>
+        <label class="admin-feature-name">Confidence (%)<input class="admin-input" name="confidence" type="number" min="1" max="100" step="1" placeholder="70" required></label>
+        <label class="admin-feature-name">Risk
+          <select class="admin-input" name="risk" required><option value="Low">Low</option><option value="Medium" selected>Medium</option><option value="High">High</option></select>
+        </label>
+        <label class="admin-feature-name">Result
+          <select class="admin-input" name="status" required><option value="Pending" selected>Pending</option><option value="Won">Won</option><option value="Lost">Lost</option><option value="Void">Void</option></select>
+        </label>
+        <div class="admin-prediction-submit-row">
+          <button class="button-secondary admin-prediction-action" id="admin-prediction-cancel" type="button" hidden>Cancel edit</button>
+          <button class="button-primary admin-save" id="admin-prediction-submit" type="submit"><i class="fa-solid fa-plus" aria-hidden="true"></i> Add prediction</button>
+        </div>
+      </form>
+      </section>
+      <form class="admin-section" id="admin-risk-pricing-form">
+        <h3>Prediction prices by risk</h3>
+        <p>These prices appear on each prediction in the marketplace and are saved in the shared database.</p>
+        <div class="admin-risk-grid">
+          <label class="admin-risk-field">Low risk · KSh<input class="admin-input" type="number" min="0" max="1000000" step="1" data-risk-price="Low" required></label>
+          <label class="admin-risk-field">Medium risk · KSh<input class="admin-input" type="number" min="0" max="1000000" step="1" data-risk-price="Medium" required></label>
+          <label class="admin-risk-field">High risk · KSh<input class="admin-input" type="number" min="0" max="1000000" step="1" data-risk-price="High" required></label>
+          <button class="button-primary admin-risk-save" type="submit"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Save risk prices</button>
+        </div>
+      </form>
+      <form class="admin-section" id="admin-marketplace-pricing-form">
+        <h3>Marketplace feature prices</h3>
+        <p>Change prices shown on the home page and in WhatsApp booking messages. These values are saved in the shared database.</p>
+        <div class="admin-market-price-grid" id="admin-market-price-list"></div>
+        <button class="button-primary admin-market-price-save" type="submit"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Save marketplace prices</button>
+      </form>
+      <form class="admin-section admin-announcement-form" id="admin-announcement-form">
+        <div><h3>Latest announcement</h3><p style="margin:3px 0 0;color:var(--muted);font-size:9px">Update the announcement displayed on the dashboard.</p></div>
+        <label class="admin-feature-name" for="admin-announcement-title">Announcement title</label>
+        <input class="admin-input" id="admin-announcement-title" type="text" maxlength="120" required>
+        <label class="admin-feature-name" for="admin-announcement-body">Announcement message</label>
+        <textarea class="admin-input" id="admin-announcement-body" maxlength="500" required></textarea>
+        <div class="admin-form-actions"><span style="color:var(--muted);font-size:9px">Saved to the shared database.</span><div class="admin-form-actions"><button class="button-secondary admin-prediction-action admin-prediction-delete" id="admin-announcement-delete" type="button"><i class="fa-solid fa-trash" aria-hidden="true"></i> Delete announcement</button><button class="button-primary admin-save" type="submit"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Save announcement</button></div></div>
+      </form>
+      <form class="admin-section admin-announcement-form" id="admin-password-form">
+        <div><h3>Change admin password</h3><p style="margin:3px 0 0;color:var(--muted);font-size:9px">Update the admin account password used to log in.</p></div>
+        <label class="admin-feature-name" for="admin-current-password">Current password</label>
+        <input class="admin-input" id="admin-current-password" type="password" maxlength="128" required>
+        <label class="admin-feature-name" for="admin-new-password">New password</label>
+        <input class="admin-input" id="admin-new-password" type="password" maxlength="128" minlength="6" required>
+        <div class="admin-form-actions"><span style="color:var(--muted);font-size:9px">Minimum 6 characters.</span><button class="button-primary admin-save" type="submit"><i class="fa-solid fa-key" aria-hidden="true"></i> Change password</button></div>
+      </form>
+      <form class="admin-section admin-announcement-form" id="admin-username-form">
+        <div><h3>Change admin username</h3><p style="margin:3px 0 0;color:var(--muted);font-size:9px">Set the username you will enter at admin login.</p></div>
+        <label class="admin-feature-name" for="admin-current-password-username">Current password</label>
+        <input class="admin-input" id="admin-current-password-username" type="password" maxlength="128" autocomplete="current-password" required>
+        <label class="admin-feature-name" for="admin-new-username">New username</label>
+        <input class="admin-input" id="admin-new-username" type="text" minlength="3" maxlength="32" autocomplete="off" required>
+        <div class="admin-form-actions"><span style="color:var(--muted);font-size:9px">3–32 letters, numbers, dots, underscores, or hyphens.</span><button class="button-primary admin-save" type="submit"><i class="fa-solid fa-user-pen" aria-hidden="true"></i> Change username</button></div>
+      </form>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      let predictions = [];
+      const categoryIcons = {
+        "VIP Predictions": "fa-crown",
+        "Mega Jackpot": "fa-trophy",
+        "Fixed Odds": "fa-lock",
+        "Super Odds": "fa-bolt",
+        "Recovery": "fa-rotate",
+        "Daily Odds": "fa-calendar-day",
+        "Weekly DM": "fa-calendar-week",
+        "Hot Predictions": "fa-fire",
+        "Featured": "fa-star",
+        "AI Predictions": "fa-robot",
+        "Statistics": "fa-chart-line",
+        "Winning Predictions": "fa-trophy",
+        "Football": "fa-futbol",
+        "Prediction Ticket": "fa-ticket",
+        "Premium": "fa-gem",
+        "High Confidence": "fa-arrow-trend-up",
+        "Low Risk": "fa-shield-halved",
+        "Alerts": "fa-bell",
+        "VIP": "fa-crown",
+        "Correct Score": "fa-trophy",
+        "BTTS": "fa-futbol",
+        "Over/Under": "fa-arrow-trend-up",
+        "Double Chance": "fa-shield-halved"
+      };
+      const saved = new Set();
+      const slip = new Set();
+      let activeFilter = "All";
+      let activeFeatureFilter = "all";
+      const list = document.getElementById("pick-list");
+      const search = document.getElementById("search-picks");
+      const mySlipList = document.getElementById("my-slip-list");
+      const mySlipTotal = document.getElementById("my-slip-total");
+      const submitSlip = document.getElementById("submit-slip");
+      const toast = document.getElementById("toast");
+      let toastTimer;
+      const adminDialog = document.getElementById("admin-dialog");
+      const authDialog = document.getElementById("auth-dialog");
+      const authForm = document.getElementById("auth-form");
+      const authClose = document.getElementById("auth-close");
+      const guestAuthDialog = document.getElementById("guest-auth-dialog");
+      const guestAuthForm = document.getElementById("guest-auth-form");
+      const guestUsernameInput = document.getElementById("guest-username");
+      const guestPasswordInput = document.getElementById("guest-password");
+      const messagesDialog = document.getElementById("messages-dialog");
+      const adminMessageForm = document.getElementById("admin-message-form");
+      const messageList = document.getElementById("admin-message-list");
+      const adminInboxList = document.getElementById("admin-inbox-list");
+      const adminInboxCount = document.getElementById("admin-inbox-count");
+      const adminCustomerList = document.getElementById("admin-customer-list");
+      const notificationsDialog = document.getElementById("notifications-dialog");
+      const notificationsList = document.getElementById("notifications-list");
+      const adminNotificationForm = document.getElementById("admin-notification-form");
+      const adminNotificationList = document.getElementById("admin-notification-list");
+      const notificationCount = document.getElementById("notification-count");
+      const tipsterList = document.getElementById("tipster-list");
+      const tipsterProfileForm = document.getElementById("tipster-profile-form");
+      const tipsterLoginCta = document.getElementById("tipster-login-cta");
+      const tipsterAccountStatus = document.getElementById("tipster-account-status");
+      const accountOpen = document.getElementById("account-open");
+      const guestMessageAdmin = document.getElementById("guest-message-admin");
+      const guestReplyCount = document.getElementById("guest-reply-count");
+      const adminLogout = document.getElementById("admin-logout");
+      const authUsername = document.getElementById("login-username");
+      const authPassword = document.getElementById("login-password");
+      const userAvatar = document.getElementById("user-avatar");
+      const sidebarUserAvatar = document.getElementById("sidebar-user-avatar");
+      const sidebarUserName = document.getElementById("sidebar-user-name");
+      const sidebarUserStatus = document.getElementById("sidebar-user-status");
+      const adminStorageKey = "oddshaven-admin-demo-v1";
+      const predictionsStorageKey = "oddshaven-predictions-v1";
+      const adminPredictionForm = document.getElementById("admin-prediction-form");
+      const adminMatchRows = document.getElementById("admin-match-rows");
+      const adminAddMatch = document.getElementById("admin-add-match");
+      const adminPredictionList = document.getElementById("admin-prediction-list");
+      const adminPredictionId = document.getElementById("admin-prediction-id");
+      const adminPredictionSubmit = document.getElementById("admin-prediction-submit");
+      const adminPredictionCancel = document.getElementById("admin-prediction-cancel");
+      const announcement = document.querySelector(".announcement");
+      const announcementTitle = announcement.querySelector("strong");
+      const announcementBody = announcement.querySelector("p");
+      const announcementLabel = announcement.querySelector("small");
+      const marketplacePriceCards = [...document.querySelectorAll(".priced-feature")];
+      const marketplacePriceKey = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      let isAuthenticated = false;
+      let currentUser = null;
+      let guestAuthPurpose = null;
+      let lastGuestUnreadReplyCount = null;
+      let lastAdminUsername = "";
+      let logoutPromise = null;
+      const defaultRiskPrices = { Low: 500, Medium: 750, High: 1000 };
+      const getSafeNumber = (value, fallback = 0) => {
+        const numeric = Number(value);
+        return Number.isFinite(numeric) && numeric >= 0 ? numeric : fallback;
+      };
+      const getSafePrice = (priceMap, key, fallback = 0) => {
+        const value = priceMap && typeof priceMap === "object" ? priceMap[key] : undefined;
+        return getSafeNumber(value, fallback);
+      };
+      let adminState = {
+        riskPrices: { ...defaultRiskPrices },
+        featurePrices: Object.fromEntries(marketplacePriceCards.map((card) => {
+          const name = card.querySelector(".feature-name").textContent.trim();
+          const priceText = card.querySelector(".feature-price strong").textContent;
+          return [marketplacePriceKey(name), getSafeNumber(priceText.replace(/[^\d]/g, ""), 0)];
+        })),
+        predictions: [],
+        announcement: {
+          title: announcementTitle.textContent.trim(),
+          body: announcementBody.textContent.trim()
+        }
+      };
+
+      const escapeHTML = (value) => String(value).replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[character]);
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+      }
+
+      function persistAdminState() {
+        return true;
+      }
+
+      function applyStoredAdminState() {
+        renderAnnouncement();
+      }
+
+      function syncUserBadge(username, isLoggedIn, role = '') {
+        const text = isLoggedIn && username ? username.slice(0, 2).toUpperCase() : 'OH';
+        const displayName = isLoggedIn && username ? username : 'Guest account';
+        const status = role === 'admin' ? 'Admin mode' : role === 'guest' ? 'Guest account' : 'Preview mode';
+
+        userAvatar.textContent = text;
+        userAvatar.title = isLoggedIn ? `Logged in as ${username} (${status})` : 'Guest account';
+        accountOpen.title = role === 'guest' ? 'Log out of guest account' : 'Guest account';
+        accountOpen.setAttribute('aria-label', role === 'guest' ? 'Log out of guest account' : 'Guest account login');
+        sidebarUserAvatar.textContent = text;
+        sidebarUserName.textContent = displayName;
+        sidebarUserStatus.textContent = status;
+        tipsterProfileForm.hidden = role !== 'guest';
+        guestMessageAdmin.hidden = role !== 'guest';
+        if (role !== 'guest') {
+          guestReplyCount.hidden = true;
+          guestReplyCount.textContent = '';
+          lastGuestUnreadReplyCount = null;
+        }
+        tipsterLoginCta.hidden = role === 'guest';
+        tipsterAccountStatus.textContent = role === 'guest' ? 'Your account' : role === 'admin' ? 'Admin account' : 'Preview mode';
+      }
+
+      async function loadTipsters() {
+        try {
+          const response = await fetch('/api/tipsters');
+          const tipsters = await response.json();
+          if (!response.ok || !Array.isArray(tipsters)) throw new Error('Could not load tipster profiles.');
+          tipsterList.replaceChildren();
+          if (tipsters.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'empty-state';
+            empty.textContent = 'No tipster profiles yet. Be the first to publish one.';
+            tipsterList.append(empty);
+          } else {
+            tipsters.forEach((tipster, index) => {
+              const row = document.createElement('div');
+              row.className = 'tipster-row';
+              const rank = document.createElement('span');
+              rank.className = 'rank';
+              rank.textContent = String(index + 1).padStart(2, '0');
+              const avatar = document.createElement('span');
+              avatar.className = 'avatar';
+              avatar.textContent = String(tipster.displayName || tipster.username).slice(0, 2).toUpperCase();
+              const details = document.createElement('span');
+              details.className = 'tipster-details';
+              const name = document.createElement('strong');
+              name.textContent = tipster.displayName;
+              const specialty = document.createElement('small');
+              specialty.textContent = `${tipster.specialty} · @${tipster.username}`;
+              details.append(name, specialty);
+              row.append(rank, avatar, details);
+              tipsterList.append(row);
+
+              if (tipster.bio) {
+                const bio = document.createElement('p');
+                bio.className = 'tipster-bio';
+                bio.textContent = tipster.bio;
+                details.append(bio);
+              }
+
+              if (currentUser && currentUser.id === tipster.userId) {
+                document.getElementById('tipster-display-name').value = tipster.displayName;
+                document.getElementById('tipster-specialty').value = tipster.specialty;
+                document.getElementById('tipster-bio').value = tipster.bio || '';
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Could not load tipster profiles:', error);
+          tipsterList.textContent = 'Tipster profiles could not be loaded. Please try again.';
+        }
+      }
+
+      async function updateAdminUnreadCount() {
+        if (!currentUser || currentUser.role !== 'admin') {
+          adminInboxCount.hidden = true;
+          return;
+        }
+        try {
+          const response = await fetch('/api/admin/messages/unread-count');
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Could not load notifications.');
+          adminInboxCount.textContent = result.count > 99 ? '99+' : String(result.count);
+          adminInboxCount.hidden = result.count < 1;
+        } catch (error) {
+          console.error('Could not load admin notification count:', error);
+        }
+      }
+
+      async function loadCommandCenter() {
+        try {
+          const response = await fetch('/api/admin/overview');
+          const overview = await response.json();
+          if (!response.ok) throw new Error(overview.error || 'Could not load command center.');
+          document.getElementById('command-customer-count').textContent = String(overview.customerCount);
+          document.getElementById('command-prediction-count').textContent = String(overview.predictionCount);
+          document.getElementById('command-pending-count').textContent = String(overview.pendingCount);
+          document.getElementById('command-unread-count').textContent = String(overview.unreadMessageCount);
+          document.getElementById('command-win-rate').textContent = overview.winRate === null ? '—' : `${overview.winRate}%`;
+          document.getElementById('command-results').textContent = `${overview.wonCount} / ${overview.lostCount} / ${overview.voidCount}`;
+          document.getElementById('command-tipster-count').textContent = String(overview.tipsterCount);
+          document.getElementById('command-unread-replies').textContent = String(overview.unreadReplyCount);
+          document.getElementById('command-server-status').textContent = 'Online';
+          document.getElementById('command-database-status').textContent = overview.database === 'connected' ? 'Connected' : 'Unavailable';
+          document.getElementById('command-updated-at').textContent = new Date(overview.serverTime).toLocaleTimeString();
+        } catch (error) {
+          console.error('Command center failed to load:', error);
+          document.getElementById('command-server-status').textContent = 'Unavailable';
+          document.getElementById('command-database-status').textContent = 'Unavailable';
+          showToast(error.message || 'Could not load command center data.');
+        }
+      }
+
+      async function loadAdminCustomers() {
+        adminCustomerList.replaceChildren();
+        const loading = document.createElement('div');
+        loading.className = 'empty-state';
+        loading.textContent = 'Loading community accounts…';
+        adminCustomerList.append(loading);
+        try {
+          const response = await fetch('/api/admin/customers');
+          const customers = await response.json();
+          if (!response.ok || !Array.isArray(customers)) throw new Error(customers.error || 'Could not load community accounts.');
+          adminCustomerList.replaceChildren();
+          if (!customers.length) {
+            const empty = document.createElement('div');
+            empty.className = 'empty-state';
+            empty.textContent = 'No community accounts have registered yet.';
+            adminCustomerList.append(empty);
+            return;
+          }
+          customers.forEach((customer) => {
+            const row = document.createElement('article');
+            row.className = 'admin-customer-row';
+            const identity = document.createElement('div');
+            const username = document.createElement('strong');
+            username.textContent = `@${customer.username}`;
+            const profile = document.createElement('small');
+            profile.textContent = customer.displayName
+              ? `${customer.displayName} · ${customer.specialty}`
+              : `No tipster profile · joined ${new Date(`${customer.createdAt}Z`).toLocaleDateString()}`;
+            identity.append(username, profile);
+            const activity = document.createElement('small');
+            activity.textContent = `${customer.messageCount} private message${customer.messageCount === 1 ? '' : 's'}`;
+            row.append(identity, activity);
+            adminCustomerList.append(row);
+          });
+        } catch (error) {
+          console.error('Admin customer list failed to load:', error);
+          adminCustomerList.textContent = error.message || 'Could not load community accounts.';
+        }
+      }
+
+      async function refreshCommandCenter() {
+        if (!(await checkSession()) || !currentUser || currentUser.role !== 'admin') return;
+        await Promise.all([loadCommandCenter(), loadAdminCustomers()]);
+      }
+
+      async function updateGuestUnreadReplyCount() {
+        if (!currentUser || currentUser.role !== 'guest') return;
+        try {
+          const response = await fetch('/api/messages/unread-replies');
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Could not load reply alerts.');
+          const count = Number(result.count) || 0;
+          if (lastGuestUnreadReplyCount === null ? count > 0 : count > lastGuestUnreadReplyCount) {
+            showToast(count === 1 ? 'The admin replied to your private message.' : 'The admin replied to your private messages.');
+            if (messagesDialog.open) await loadGuestMessageHistory();
+          }
+          lastGuestUnreadReplyCount = messagesDialog.open ? 0 : count;
+          const visibleCount = messagesDialog.open ? 0 : count;
+          guestReplyCount.textContent = visibleCount > 99 ? '99+' : String(visibleCount);
+          guestReplyCount.hidden = visibleCount === 0;
+          guestMessageAdmin.title = visibleCount
+            ? `You have ${visibleCount} unread admin ${visibleCount === 1 ? 'reply' : 'replies'}`
+            : 'Message admin privately';
+          guestMessageAdmin.setAttribute('aria-label', guestMessageAdmin.title);
+        } catch (error) {
+          console.error('Could not load guest reply alerts:', error);
+        }
+      }
+
+      function notificationDate(value) {
+        const date = new Date(`${value}Z`);
+        return Number.isNaN(date.getTime()) ? value : date.toLocaleString();
+      }
+
+      function renderPublicNotifications(target, notifications, isAdmin = false) {
+        target.replaceChildren();
+        if (!notifications.length) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-state';
+          empty.textContent = 'No admin notifications yet.';
+          target.append(empty);
+          return;
+        }
+        notifications.forEach((notification) => {
+          const card = document.createElement('article');
+          card.className = 'public-notification';
+          const title = document.createElement('h3');
+          title.textContent = notification.title;
+          const date = document.createElement('time');
+          date.dateTime = notification.createdAt;
+          date.textContent = notificationDate(notification.createdAt);
+          const body = document.createElement('p');
+          body.textContent = notification.body;
+          card.append(title, date, body);
+          if (isAdmin) {
+            const remove = document.createElement('button');
+            remove.className = 'button-secondary admin-prediction-action admin-prediction-delete';
+            remove.type = 'button';
+            remove.dataset.deleteNotification = notification.id;
+            remove.style.marginTop = '9px';
+            remove.textContent = 'Delete notification';
+            card.append(remove);
+          }
+          target.append(card);
+        });
+      }
+
+      async function loadAdminNotifications() {
+        adminNotificationList.replaceChildren();
+        const loading = document.createElement('div');
+        loading.className = 'empty-state';
+        loading.textContent = 'Loading notifications…';
+        adminNotificationList.append(loading);
+        try {
+          const response = await fetch('/api/notifications');
+          const notifications = await response.json();
+          if (!response.ok || !Array.isArray(notifications)) throw new Error(notifications.error || 'Could not load notifications.');
+          renderPublicNotifications(adminNotificationList, notifications, true);
+          notificationCount.textContent = notifications.length > 99 ? '99+' : String(notifications.length);
+          notificationCount.hidden = notifications.length === 0;
+        } catch (error) {
+          console.error('Could not load admin notifications:', error);
+          adminNotificationList.textContent = error.message || 'Could not load notifications.';
+        }
+      }
+
+      async function openNotifications() {
+        notificationsList.replaceChildren();
+        const loading = document.createElement('div');
+        loading.className = 'empty-state';
+        loading.textContent = 'Loading notifications…';
+        notificationsList.append(loading);
+        notificationsDialog.showModal();
+        try {
+          const response = await fetch('/api/notifications');
+          const notifications = await response.json();
+          if (!response.ok || !Array.isArray(notifications)) throw new Error(notifications.error || 'Could not load notifications.');
+          renderPublicNotifications(notificationsList, notifications);
+          notificationCount.textContent = notifications.length > 99 ? '99+' : String(notifications.length);
+          notificationCount.hidden = notifications.length === 0;
+        } catch (error) {
+          console.error('Could not load notifications:', error);
+          notificationsList.textContent = error.message || 'Could not load notifications.';
+        }
+      }
+
+      function renderAdminMessages(target, messages) {
+        target.replaceChildren();
+        if (!messages.length) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-state';
+          empty.textContent = 'No messages yet.';
+          target.append(empty);
+          return;
+        }
+        messages.forEach((message) => {
+          const card = document.createElement('article');
+          card.className = 'admin-message';
+          const header = document.createElement('header');
+          const sender = document.createElement('strong');
+          sender.textContent = `@${message.sender}`;
+          const date = document.createElement('time');
+          date.textContent = new Date(`${message.createdAt}Z`).toLocaleString();
+          header.append(sender, date);
+          const body = document.createElement('p');
+          body.textContent = message.message;
+          card.append(header, body);
+          if (message.latestReply) {
+            const reply = document.createElement('div');
+            reply.className = 'admin-message-reply';
+            const replyLabel = document.createElement('strong');
+            replyLabel.textContent = 'Your latest reply';
+            const replyBody = document.createElement('p');
+            replyBody.textContent = message.latestReply;
+            reply.append(replyLabel, replyBody);
+            card.append(reply);
+          }
+          const replyForm = document.createElement('form');
+          replyForm.className = 'admin-reply-form';
+          replyForm.dataset.messageId = message.id;
+          const replyInput = document.createElement('textarea');
+          replyInput.className = 'admin-input';
+          replyInput.maxLength = 2000;
+          replyInput.required = true;
+          replyInput.placeholder = 'Write a private reply to this guest';
+          replyInput.setAttribute('aria-label', `Reply to @${message.sender}`);
+          const replyButton = document.createElement('button');
+          replyButton.className = 'button-primary admin-save';
+          replyButton.type = 'submit';
+          replyButton.textContent = 'Send reply';
+          replyForm.append(replyInput, replyButton);
+          replyForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            replyButton.disabled = true;
+            try {
+              const response = await fetch(`/api/admin/messages/${message.id}/replies`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ reply: replyInput.value.trim() })
+              });
+              const result = await response.json();
+              if (!response.ok) throw new Error(result.error || 'Could not send your reply.');
+              if (adminDialog.open) {
+                await loadAdminPanelInbox();
+              } else {
+                const refresh = await fetch('/api/admin/messages');
+                const refreshedMessages = await refresh.json();
+                if (!refresh.ok || !Array.isArray(refreshedMessages)) throw new Error(refreshedMessages.error || 'Reply sent, but inbox could not refresh.');
+                renderAdminMessages(target, refreshedMessages);
+                await updateAdminUnreadCount();
+              }
+              showToast('Private reply sent to the guest.');
+            } catch (error) {
+              showToast(error.message || 'Could not send your reply.');
+            } finally {
+              replyButton.disabled = false;
+            }
+          });
+          card.append(replyForm);
+          target.append(card);
+        });
+      }
+
+      async function loadGuestMessageHistory() {
+        messageList.replaceChildren();
+        const loading = document.createElement('div');
+        loading.className = 'empty-state';
+        loading.textContent = 'Loading your messages…';
+        messageList.append(loading);
+        try {
+          const response = await fetch('/api/messages');
+          const messages = await response.json();
+          if (!response.ok || !Array.isArray(messages)) throw new Error(messages.error || 'Could not load your messages.');
+          messageList.replaceChildren();
+          if (!messages.length) {
+            const empty = document.createElement('div');
+            empty.className = 'empty-state';
+            empty.textContent = 'No messages yet. Send a private message to the admin below.';
+            messageList.append(empty);
+            await updateGuestUnreadReplyCount();
+            return;
+          }
+          messages.forEach((message) => {
+            const card = document.createElement('article');
+            card.className = 'admin-message';
+            const sent = document.createElement('p');
+            sent.textContent = message.message;
+            const date = document.createElement('time');
+            date.textContent = new Date(`${message.createdAt}Z`).toLocaleString();
+            date.style.cssText = 'display:block;margin-top:6px;color:var(--muted);font-size:9px';
+            card.append(sent, date);
+            if (message.reply) {
+              const reply = document.createElement('div');
+              reply.className = 'admin-message-reply';
+              const label = document.createElement('strong');
+              label.textContent = 'Reply from admin';
+              const replyBody = document.createElement('p');
+              replyBody.textContent = message.reply;
+              reply.append(label, replyBody);
+              if (message.repliedAt) {
+                const replyDate = document.createElement('time');
+                replyDate.textContent = new Date(`${message.repliedAt}Z`).toLocaleString();
+                replyDate.style.cssText = 'display:block;margin-top:5px;color:var(--muted);font-size:9px';
+                reply.append(replyDate);
+              }
+              card.append(reply);
+            }
+            messageList.append(card);
+          });
+          await updateGuestUnreadReplyCount();
+        } catch (error) {
+          console.error('Guest message history failed to load:', error);
+          messageList.textContent = error.message || 'Could not load your messages.';
+        }
+      }
+
+      async function loadAdminPanelInbox() {
+        adminInboxList.replaceChildren();
+        const loading = document.createElement('div');
+        loading.className = 'empty-state';
+        loading.textContent = 'Loading private messages…';
+        adminInboxList.append(loading);
+        try {
+          const response = await fetch('/api/admin/messages');
+          const messages = await response.json();
+          if (!response.ok || !Array.isArray(messages)) throw new Error(messages.error || 'Could not load admin messages.');
+          renderAdminMessages(adminInboxList, messages);
+          await updateAdminUnreadCount();
+        } catch (error) {
+          console.error('Admin inbox failed to load:', error);
+          adminInboxList.textContent = error.message || 'Could not load private messages.';
+        }
+      }
+
+      async function openAdminInbox() {
+        document.getElementById('messages-title').textContent = 'Admin inbox';
+        document.getElementById('messages-description').textContent = 'Private messages from guest accounts. Only admins can read these messages.';
+        adminMessageForm.hidden = true;
+        messageList.hidden = false;
+        messageList.replaceChildren();
+        const loading = document.createElement('div');
+        loading.className = 'empty-state';
+        loading.textContent = 'Loading private messages…';
+        messageList.append(loading);
+        messagesDialog.showModal();
+        try {
+          const response = await fetch('/api/admin/messages');
+          const messages = await response.json();
+          if (!response.ok || !Array.isArray(messages)) throw new Error(messages.error || 'Could not load admin messages.');
+          renderAdminMessages(messageList, messages);
+          await updateAdminUnreadCount();
+        } catch (error) {
+          console.error('Admin inbox failed to load:', error);
+          messageList.textContent = error.message || 'Could not load private messages.';
+        }
+      }
+
+      function openGuestMessageForm() {
+        document.getElementById('messages-title').textContent = 'Message admin';
+        document.getElementById('messages-description').textContent = 'Your messages and admin replies are private to your account.';
+        adminMessageForm.hidden = false;
+        messageList.hidden = false;
+        adminMessageForm.reset();
+        messagesDialog.showModal();
+        loadGuestMessageHistory();
+      }
+
+      async function checkSession() {
+        try {
+          const response = await fetch('/api/session');
+          const data = await response.json();
+          if (data && data.authenticated) {
+            currentUser = data.user;
+            isAuthenticated = data.user.role === 'admin';
+            if (isAuthenticated) lastAdminUsername = data.user.username;
+            syncUserBadge(data.user.username, true, data.user.role);
+            if (data.user.role === 'admin') await updateAdminUnreadCount();
+            if (data.user.role === 'guest') await updateGuestUnreadReplyCount();
+            return true;
+          }
+        } catch (error) {
+          console.error('Session check failed:', error);
+        }
+        isAuthenticated = false;
+        currentUser = null;
+        syncUserBadge('', false, '');
+        return false;
+      }
+
+      async function loadAdminData() {
+        if (!(await checkSession()) || currentUser?.role !== 'admin') throw new Error('An admin login is required.');
+        try {
+          const response = await fetch('/api/admin-state', { headers: { 'Accept': 'application/json' } });
+          if (!response.ok) {
+            throw new Error('Failed to load admin state');
+          }
+          const state = await response.json();
+          if (state.riskPrices && typeof state.riskPrices === 'object') adminState.riskPrices = { ...defaultRiskPrices, ...state.riskPrices };
+          if (state.featurePrices && typeof state.featurePrices === 'object') adminState.featurePrices = { ...adminState.featurePrices, ...state.featurePrices };
+          if (state.announcement && typeof state.announcement === 'object') adminState.announcement = state.announcement;
+          predictions = Array.isArray(state.predictions) ? state.predictions.filter(isValidPrediction) : [];
+          renderAnnouncement();
+          renderAdminPredictions();
+          renderMarketplacePrices();
+          document.querySelectorAll("[data-risk-price]").forEach((input) => {
+            const key = input.dataset.riskPrice;
+            input.value = String(getSafeNumber(adminState.riskPrices[key], defaultRiskPrices[key] ?? 0));
+          });
+          renderPredictions();
+        } catch (error) {
+          console.error('Could not load stored admin data:', error);
+          showToast('Could not load admin data from the database.');
+        }
+      }
+
+      function renderAnnouncement() {
+        const announcementData = adminState.announcement && typeof adminState.announcement === 'object' ? adminState.announcement : null;
+        if (announcementData && announcementData.title && announcementData.body) {
+          announcementTitle.textContent = announcementData.title;
+          announcementBody.textContent = announcementData.body;
+          announcementLabel.textContent = "Product update";
+        } else {
+          announcementTitle.textContent = "No announcement currently";
+          announcementBody.textContent = "Check back here for the latest OddsHaven updates.";
+          announcementLabel.textContent = "";
+        }
+      }
+
+      applyStoredAdminState();
+      const marketplacePriceList = document.getElementById("admin-market-price-list");
+      marketplacePriceCards.forEach((card) => {
+        const name = card.querySelector(".feature-name").textContent.trim();
+        const key = marketplacePriceKey(name);
+        const label = document.createElement("label");
+        label.className = "admin-market-price-field";
+        label.textContent = `${name} · KSh`;
+        const input = document.createElement("input");
+        input.className = "admin-input";
+        input.type = "number";
+        input.min = "0";
+        input.max = "1000000";
+        input.step = "1";
+        input.required = true;
+        input.dataset.featurePrice = key;
+        input.value = String(getSafePrice(adminState.featurePrices, key, 0));
+        label.append(input);
+        marketplacePriceList.append(label);
+      });
+      renderAdminPredictions();
+      function renderMarketplacePrices() {
+        marketplacePriceCards.forEach((card) => {
+          const name = card.querySelector(".feature-name").textContent.trim();
+          const key = marketplacePriceKey(name);
+          const price = getSafePrice(adminState.featurePrices, key, 0);
+          card.querySelector(".feature-price strong").textContent = `KSh ${price.toLocaleString("en-KE")}`;
+          const bookingLink = card.querySelector(".book-feature");
+          const bookingUrl = new URL(bookingLink.href);
+          bookingUrl.searchParams.set("text", `Hello OddsHaven, I have booked ${name} for KSh ${price.toLocaleString("en-KE")}.`);
+          bookingLink.href = bookingUrl.toString();
+        });
+      }
+      renderMarketplacePrices();
+      document.querySelectorAll("[data-risk-price]").forEach((input) => {
+        const key = input.dataset.riskPrice;
+        input.value = String(getSafeNumber(adminState.riskPrices[key], defaultRiskPrices[key] ?? 0));
+      });
+
+      function isValidPrediction(pick) {
+        return pick && typeof pick === "object"
+          && typeof pick.id === "string"
+          && typeof pick.home === "string" && pick.home.trim()
+          && typeof pick.away === "string" && pick.away.trim()
+          && typeof pick.league === "string" && pick.league.trim()
+          && typeof pick.kickoff === "string" && pick.kickoff.trim()
+          && typeof pick.category === "string" && Object.hasOwn(categoryIcons, pick.category)
+          && Number.isInteger(Number(pick.confidence)) && Number(pick.confidence) >= 1 && Number(pick.confidence) <= 100
+          && ["Low", "Medium", "High"].includes(pick.risk)
+          && ["Pending", "Won", "Lost", "Void"].includes(pick.status);
+      }
+
+      function createPredictionId() {
+        return `pick-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+      }
+
+      function getPredictionPrice(pick) {
+        return pick.bundleId && Number.isSafeInteger(Number(pick.bundlePrice))
+          ? getSafeNumber(pick.bundlePrice)
+          : getSafeNumber(adminState.riskPrices?.[pick.risk], defaultRiskPrices[pick.risk] ?? 0);
+      }
+
+      function getBundleMatchCount(bundleId) {
+        return predictions.filter((pick) => pick.bundleId === bundleId).length;
+      }
+
+      function persistPredictions() {
+        adminState.predictions = predictions;
+        return true;
+      }
+
+      function renderAdminPredictions() {
+        adminPredictionList.replaceChildren();
+        if (!Array.isArray(predictions) || predictions.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "empty-state";
+          empty.textContent = "No predictions published. Add today's first pick below.";
+          adminPredictionList.append(empty);
+          return;
+        }
+
+        predictions.forEach((pick) => {
+          const row = document.createElement("div");
+          row.className = "admin-prediction-row";
+          row.dataset.predictionId = pick.id;
+          const match = document.createElement("div");
+          match.className = "admin-prediction-match";
+          const title = document.createElement("strong");
+          title.textContent = `${pick.home} vs ${pick.away}`;
+          const details = document.createElement("small");
+          details.textContent = `${pick.category} · ${pick.kickoff}`;
+          match.append(title, details);
+          row.append(match);
+
+          const controls = document.createElement("div");
+          controls.className = "admin-prediction-controls";
+          const status = document.createElement("select");
+          status.className = "admin-input admin-prediction-status";
+          status.dataset.predictionStatus = "";
+          status.setAttribute("aria-label", `Result for ${pick.home} vs ${pick.away}`);
+          ["Pending", "Won", "Lost", "Void"].forEach((value) => {
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = value;
+            option.selected = pick.status === value;
+            status.append(option);
+          });
+          controls.append(status);
+          const edit = document.createElement("button");
+          edit.className = "button-secondary admin-prediction-action";
+          edit.type = "button";
+          edit.dataset.predictionEdit = "";
+          edit.textContent = "Edit";
+          controls.append(edit);
+          const remove = document.createElement("button");
+          remove.className = "button-secondary admin-prediction-action admin-prediction-delete";
+          remove.type = "button";
+          remove.dataset.predictionDelete = "";
+          remove.setAttribute("aria-label", `Delete ${pick.home} vs ${pick.away}`);
+          remove.innerHTML = '<i class="fa-solid fa-trash" aria-hidden="true"></i>';
+          controls.append(remove);
+          row.append(controls);
+          adminPredictionList.append(row);
+        });
+      }
+
+      function createAdminMatchRow(index, match = {}) {
+        const row = document.createElement('div');
+        row.className = 'admin-match-row';
+        const header = document.createElement('div');
+        header.className = 'admin-match-row-header';
+        const title = document.createElement('strong');
+        title.textContent = `Match ${index + 1}`;
+        header.append(title);
+        if (index > 0) {
+          const remove = document.createElement('button');
+          remove.className = 'button-secondary admin-prediction-action admin-match-remove';
+          remove.type = 'button';
+          remove.textContent = 'Remove';
+          remove.setAttribute('aria-label', `Remove match ${index + 1}`);
+          header.append(remove);
+        }
+        row.append(header);
+        [
+          ['Home team', 'home', 60, ''],
+          ['Away team', 'away', 60, ''],
+          ['League / competition', 'league', 80, ''],
+          ['Kickoff / match time', 'kickoff', 40, 'e.g. Today · 18:30']
+        ].forEach(([labelText, name, maxLength, placeholder]) => {
+          const label = document.createElement('label');
+          label.className = 'admin-feature-name';
+          label.append(document.createTextNode(labelText));
+          const input = document.createElement('input');
+          input.className = 'admin-input';
+          input.name = name;
+          input.type = 'text';
+          input.maxLength = maxLength;
+          input.required = true;
+          if (placeholder) input.placeholder = placeholder;
+          input.value = match[name] || '';
+          label.append(input);
+          row.append(label);
+        });
+        return row;
+      }
+
+      function resetPredictionForm() {
+        adminPredictionForm.reset();
+        adminPredictionId.value = "";
+        adminMatchRows.replaceChildren(createAdminMatchRow(0));
+        adminAddMatch.hidden = false;
+        adminAddMatch.disabled = false;
+        adminPredictionForm.elements.namedItem("risk").value = "Medium";
+        adminPredictionForm.elements.namedItem("status").value = "Pending";
+        adminPredictionSubmit.innerHTML = '<i class="fa-solid fa-plus" aria-hidden="true"></i> Add prediction';
+        adminPredictionCancel.hidden = true;
+      }
+
+      function renderPredictions() {
+        renderSlip();
+        const query = search.value.trim().toLowerCase();
+        const filtered = predictions.map((pick, index) => ({ ...pick, index })).filter((pick) => {
+          const matchesCategory = activeFilter === "All" || pick.category === activeFilter;
+          const matchesSearch = `${pick.home} ${pick.away} ${pick.league} ${pick.category} ${pick.selection || ""}`.toLowerCase().includes(query);
+          const matchesFeature = activeFeatureFilter === "all"
+            || (activeFeatureFilter === "confidence" && Number.parseInt(pick.confidence, 10) >= 75)
+            || (activeFeatureFilter === "low-risk" && pick.risk === "Low")
+            || (activeFeatureFilter === "medium-risk" && pick.risk === "Medium");
+          return matchesCategory && matchesSearch && matchesFeature;
+        });
+        if (filtered.length === 0) {
+          list.innerHTML = `<div class="empty-state">${predictions.length === 0
+            ? "No predictions published yet. Check back later for today's picks."
+            : "No predictions match your search. Try another team or category."}</div>`;
+          return;
+        }
+        list.innerHTML = filtered.map((pick) => `
+          <article class="pick">
+            <div class="pick-top"><span class="league">${escapeHTML(pick.league)} · ${escapeHTML(pick.kickoff)}</span><span class="category-tag"><i class="fa-solid ${categoryIcons[pick.category] || "fa-bullseye"} feature-icon" aria-hidden="true"></i>${escapeHTML(pick.category)}</span></div>
+            <div class="teams"><span class="team-mark">${escapeHTML(pick.homeCode)}</span>${escapeHTML(pick.home)} <span class="vs">vs</span> <span class="team-mark">${escapeHTML(pick.awayCode)}</span>${escapeHTML(pick.away)}</div>
+            <div class="pick-bottom">
+              ${pick.selection ? `<div class="pick-market"><strong>${escapeHTML(pick.selection)}</strong></div>` : ""}
+              <div class="pick-metrics"><span class="metric"><i class="fa-solid ${categoryIcons["High Confidence"]} feature-icon" aria-hidden="true"></i>Confidence<strong class="confidence">${escapeHTML(String(pick.confidence))}%</strong></span><span class="metric"><i class="fa-solid ${categoryIcons["Low Risk"]} feature-icon" aria-hidden="true"></i>Risk<strong>${escapeHTML(pick.risk)}</strong></span><span class="metric pick-price">${pick.bundleId ? `One bundle price · ${getBundleMatchCount(pick.bundleId)} matches` : "Pick price"}<strong>${pick.bundleId ? `KSh ${getPredictionPrice(pick).toLocaleString("en-KE")} for all` : `KSh ${getPredictionPrice(pick).toLocaleString("en-KE")}`}</strong></span></div>
+              <div class="pick-buttons">
+                <span class="prediction-status" data-status="${escapeHTML(pick.status)}">${escapeHTML(pick.status)}</span>
+                <button class="save-pick${saved.has(pick.id) ? " saved" : ""}" type="button" data-save="${escapeHTML(pick.id)}" aria-label="${saved.has(pick.id) ? "Remove saved pick" : "Save pick"}" aria-pressed="${saved.has(pick.id)}">♡</button>
+                <button class="add-pick${slip.has(pick.id) ? " saved" : ""}" type="button" data-slip="${escapeHTML(pick.id)}" aria-label="${slip.has(pick.id) ? "Remove from My slip" : "Add to My slip"}" aria-pressed="${slip.has(pick.id)}">${slip.has(pick.id) ? "✓" : "+"}</button>
+              </div>
+            </div>
+          </article>`).join("");
+      }
+
+      function updateCounts() {
+        document.getElementById("saved-count").textContent = String(saved.size);
+        document.getElementById("slip-count").textContent = String(slip.size);
+        document.getElementById("prediction-count").textContent = String(predictions.length);
+      }
+
+      function renderSlip() {
+        const selectedPicks = [...slip].map((id) => predictions.find((pick) => pick.id === id)).filter(Boolean);
+        mySlipList.replaceChildren();
+        document.getElementById("slip-total-count").textContent = `${selectedPicks.length} pick${selectedPicks.length === 1 ? "" : "s"}`;
+        let total = 0;
+        const chargedBundles = new Set();
+
+        if (selectedPicks.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "empty-state";
+          empty.textContent = "Your slip is empty. Add a pick to see it here.";
+          mySlipList.append(empty);
+        }
+
+        selectedPicks.forEach((pick) => {
+          const isFirstBundlePick = pick.bundleId && !chargedBundles.has(pick.bundleId);
+          if (pick.bundleId) chargedBundles.add(pick.bundleId);
+          const price = pick.bundleId ? (isFirstBundlePick ? getPredictionPrice(pick) : 0) : getPredictionPrice(pick);
+          total += price;
+          const item = document.createElement("div");
+          item.className = "my-slip-item";
+          const match = document.createElement("div");
+          match.className = "my-slip-match";
+          const teams = document.createElement("strong");
+          teams.textContent = `${pick.home} vs ${pick.away}`;
+          const details = document.createElement("small");
+          details.textContent = pick.bundleId
+            ? `${pick.category} package · ${getBundleMatchCount(pick.bundleId)} matches`
+            : `${pick.category} · ${pick.risk} risk`;
+          match.append(teams, details);
+          const priceLabel = document.createElement("span");
+          priceLabel.className = "my-slip-price";
+          priceLabel.textContent = pick.bundleId && !isFirstBundlePick ? "Included" : `KSh ${price.toLocaleString("en-KE")}`;
+          const remove = document.createElement("button");
+          remove.className = "my-slip-remove";
+          remove.type = "button";
+          remove.dataset.removeSlip = pick.id;
+          remove.setAttribute("aria-label", `Remove ${pick.home} vs ${pick.away} from My slip`);
+          remove.textContent = "×";
+          item.append(match, priceLabel, remove);
+          mySlipList.append(item);
+        });
+
+        mySlipTotal.textContent = `KSh ${total.toLocaleString("en-KE")}`;
+        submitSlip.disabled = selectedPicks.length === 0;
+      }
+
+      mySlipList.addEventListener("click", (event) => {
+        const removeButton = event.target.closest("[data-remove-slip]");
+        if (!removeButton) return;
+        const removedPick = predictions.find((pick) => pick.id === removeButton.dataset.removeSlip);
+        if (removedPick?.bundleId) {
+          predictions.filter((pick) => pick.bundleId === removedPick.bundleId).forEach((pick) => slip.delete(pick.id));
+        } else {
+          slip.delete(removeButton.dataset.removeSlip);
+        }
+        updateCounts();
+        renderPredictions();
+        showToast("Pick removed from My slip.");
+      });
+
+      submitSlip.addEventListener("click", () => {
+        const selectedPicks = [...slip].map((id) => predictions.find((pick) => pick.id === id)).filter(Boolean);
+        if (selectedPicks.length === 0) {
+          showToast("Add at least one prediction to My slip before submitting.");
+          return;
+        }
+        const chargedBundles = new Set();
+        const lines = selectedPicks.map((pick) => {
+          if (pick.bundleId) {
+            chargedBundles.add(pick.bundleId);
+            return `- ${pick.home} vs ${pick.away} (${pick.league}, ${pick.kickoff}) | Included in ${pick.category} package`;
+          }
+          const price = getPredictionPrice(pick);
+          return `- ${pick.home} vs ${pick.away} (${pick.league}, ${pick.kickoff}) | ${pick.category} | ${pick.risk} risk | KSh ${price.toLocaleString("en-KE")}`;
+        });
+        const bundleLines = [...chargedBundles].map((bundleId) => {
+          const pick = selectedPicks.find((selected) => selected.bundleId === bundleId);
+          return `- ${pick.category} package (${getBundleMatchCount(bundleId)} matches): KSh ${getPredictionPrice(pick).toLocaleString("en-KE")}`;
+        });
+        const total = selectedPicks
+          .filter((pick) => !pick.bundleId)
+          .reduce((sum, pick) => sum + getPredictionPrice(pick), 0)
+          + [...new Set(selectedPicks.map((pick) => pick.bundleId).filter(Boolean))]
+            .reduce((sum, bundleId) => sum + getPredictionPrice(selectedPicks.find((pick) => pick.bundleId === bundleId)), 0);
+        const message = `Hello OddsHaven, I would like to book the following picks from My slip:\n${lines.join("\n")}${bundleLines.length ? `\n\nPackage pricing:\n${bundleLines.join("\n")}` : ""}\nTotal listed price: KSh ${total.toLocaleString("en-KE")}. Please confirm my booking.`;
+        const whatsappUrl = `https://wa.me/254712640039?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      });
+
+      async function openAdminPanel() {
+        try {
+          if (logoutPromise) await logoutPromise;
+          const authenticated = await checkSession();
+          if (!authenticated || !currentUser || currentUser.role !== 'admin') {
+            if (authenticated && currentUser && currentUser.role === 'guest') {
+              showToast('Log out of your guest account before opening admin login.');
+              return;
+            }
+            authForm.reset();
+            authUsername.value = lastAdminUsername;
+            authDialog.showModal();
+            return;
+          }
+          await loadAdminData();
+          renderAdminPredictions();
+          resetPredictionForm();
+          document.getElementById("admin-announcement-title").value = adminState.announcement?.title || "";
+          document.getElementById("admin-announcement-body").value = adminState.announcement?.body || "";
+          adminDialog.showModal();
+          await loadAdminPanelInbox();
+          await loadAdminNotifications();
+          await refreshCommandCenter();
+        } catch (error) {
+          showToast("Admin management could not be opened.");
+          console.error("OddsHaven admin dialog failed to open:", error);
+        }
+      }
+
+      async function logoutAdmin(notify = true) {
+        if (logoutPromise) return logoutPromise;
+        const roleBeingLoggedOut = currentUser && currentUser.role;
+        isAuthenticated = false;
+        currentUser = null;
+        syncUserBadge('', false, '');
+        if (adminDialog.open) adminDialog.close();
+        authForm.reset();
+        authUsername.value = lastAdminUsername;
+
+        logoutPromise = (async () => {
+          try {
+            const response = await fetch('/api/logout', { method: 'POST' });
+            const json = await response.json().catch(() => ({}));
+            if (!response.ok) {
+              throw new Error(json.error || 'Logout failed');
+            }
+            if (notify) showToast(roleBeingLoggedOut === 'guest' ? 'Logged out of guest account.' : 'Logged out of admin mode.');
+          } catch (error) {
+            console.error('Logout failed:', error);
+            showToast(error.message || 'Could not log out.');
+          }
+        })();
+        try {
+          await logoutPromise;
+        } finally {
+          logoutPromise = null;
+        }
+      }
+      adminLogout.addEventListener("click", () => logoutAdmin(true));
+      document.getElementById("admin-inbox-refresh").addEventListener("click", loadAdminPanelInbox);
+      document.getElementById("command-center-refresh").addEventListener("click", refreshCommandCenter);
+      document.getElementById("admin-customers-refresh").addEventListener("click", loadAdminCustomers);
+      document.querySelectorAll("[data-admin-jump]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const section = document.getElementById(button.dataset.adminJump);
+          if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+      adminNotificationList.addEventListener("click", async (event) => {
+        const removeButton = event.target.closest("[data-delete-notification]");
+        if (!removeButton) return;
+        try {
+          const response = await fetch(`/api/admin/notifications/${encodeURIComponent(removeButton.dataset.deleteNotification)}`, { method: 'DELETE' });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Could not delete notification.');
+          await loadAdminNotifications();
+          showToast('Notification deleted.');
+        } catch (error) {
+          showToast(error.message || 'Could not delete notification.');
+        }
+      });
+      adminNotificationForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const title = document.getElementById('admin-notification-title').value.trim();
+        const body = document.getElementById('admin-notification-body').value.trim();
+        if (!title || !body) {
+          showToast('Enter a title and message for the notification.');
+          return;
+        }
+        try {
+          const response = await fetch('/api/admin/notifications', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, body })
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Could not publish notification.');
+          adminNotificationForm.reset();
+          await loadAdminNotifications();
+          showToast('Notification published for everyone.');
+        } catch (error) {
+          showToast(error.message || 'Could not publish notification.');
+        }
+      });
+      document.getElementById("admin-add-prediction").addEventListener("click", () => {
+        adminPredictionForm.scrollIntoView({ behavior: "smooth", block: "center" });
+        adminPredictionForm.querySelector('[name="home"]').focus();
+      });
+      adminAddMatch.addEventListener('click', () => {
+        const rows = [...adminMatchRows.querySelectorAll('.admin-match-row')];
+        if (rows.length >= 20) {
+          showToast('A batch can contain up to 20 matches.');
+          return;
+        }
+        const matches = rows.map((row) => Object.fromEntries(
+          ['home', 'away', 'league', 'kickoff'].map((name) => [name, row.querySelector(`[name="${name}"]`).value])
+        ));
+        adminMatchRows.replaceChildren(...matches.map((match, index) => createAdminMatchRow(index, match)));
+        adminMatchRows.append(createAdminMatchRow(matches.length));
+      });
+      adminMatchRows.addEventListener('click', (event) => {
+        const remove = event.target.closest('.admin-match-remove');
+        if (!remove) return;
+        const row = remove.closest('.admin-match-row');
+        row.remove();
+        [...adminMatchRows.querySelectorAll('.admin-match-row')].forEach((matchRow, index) => {
+          const title = matchRow.querySelector('.admin-match-row-header strong');
+          if (title) title.textContent = `Match ${index + 1}`;
+          const removeButton = matchRow.querySelector('.admin-match-remove');
+          if (index === 0 && removeButton) removeButton.remove();
+          if (index > 0 && !removeButton) {
+            const button = document.createElement('button');
+            button.className = 'button-secondary admin-prediction-action admin-match-remove';
+            button.type = 'button';
+            button.textContent = 'Remove';
+            button.setAttribute('aria-label', `Remove match ${index + 1}`);
+            matchRow.querySelector('.admin-match-row-header').append(button);
+          }
+        });
+      });
+      document.getElementById("admin-close").addEventListener("click", () => logoutAdmin(false));
+      authClose.addEventListener("click", () => authDialog.close());
+      document.getElementById("guest-auth-close").addEventListener("click", () => guestAuthDialog.close());
+      document.getElementById("messages-close").addEventListener("click", () => messagesDialog.close());
+      document.getElementById("notifications-close").addEventListener("click", () => notificationsDialog.close());
+      authDialog.addEventListener("click", (event) => {
+        if (event.target === authDialog) authDialog.close();
+      });
+      guestAuthDialog.addEventListener("click", (event) => {
+        if (event.target === guestAuthDialog) guestAuthDialog.close();
+      });
+      messagesDialog.addEventListener("click", (event) => {
+        if (event.target === messagesDialog) messagesDialog.close();
+      });
+      notificationsDialog.addEventListener("click", (event) => {
+        if (event.target === notificationsDialog) notificationsDialog.close();
+      });
+      adminDialog.addEventListener("click", (event) => {
+        if (event.target === adminDialog) logoutAdmin(false);
+      });
+      adminDialog.addEventListener("cancel", (event) => {
+        event.preventDefault();
+        logoutAdmin(false);
+      });
+      adminDialog.addEventListener("close", () => {
+        if (isAuthenticated) logoutAdmin(false);
+      });
+      adminPredictionCancel.addEventListener("click", resetPredictionForm);
+      adminPredictionForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const form = adminPredictionForm.elements;
+        const confidence = Number(form.namedItem("confidence").value);
+        const existingPick = predictions.find((item) => item.id === adminPredictionId.value);
+        const matches = [...adminMatchRows.querySelectorAll('.admin-match-row')].map((row) => ({
+          home: row.querySelector('[name="home"]').value.trim(),
+          away: row.querySelector('[name="away"]').value.trim(),
+          league: row.querySelector('[name="league"]').value.trim(),
+          kickoff: row.querySelector('[name="kickoff"]').value.trim()
+        }));
+        const settings = {
+          category: form.namedItem("category").value,
+          confidence,
+          risk: form.namedItem("risk").value,
+          status: form.namedItem("status").value
+        };
+        const picks = matches.map((match) => ({
+          ...(existingPick || {}),
+          id: adminPredictionId.value || createPredictionId(),
+          ...match,
+          homeCode: match.home.split(/\s+/).map((word) => word[0]).join("").slice(0, 3).toUpperCase(),
+          awayCode: match.away.split(/\s+/).map((word) => word[0]).join("").slice(0, 3).toUpperCase(),
+          ...settings,
+          ...(settings.category === 'Super Odds' && existingPick ? {} : { bundleId: null, bundlePrice: null })
+        }));
+        if (!picks.length || picks.some((pick) => !isValidPrediction(pick))) {
+          showToast("Check the fixture details and enter a valid confidence score.");
+          return;
+        }
+        try {
+          const isEditing = Boolean(adminPredictionId.value);
+          const response = await fetch(isEditing ? '/api/predictions' : '/api/predictions/batch', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(isEditing ? picks[0] : { ...settings, matches })
+          });
+          const json = await response.json();
+          if (!response.ok) throw new Error(json.error || 'Unable to save prediction');
+          if (isEditing) {
+            const existingIndex = predictions.findIndex((item) => item.id === picks[0].id);
+            if (existingIndex === -1) throw new Error('The prediction to update was not found.');
+            predictions[existingIndex] = { ...picks[0], bundleId: json.prediction?.bundleId ?? picks[0].bundleId, bundlePrice: json.prediction?.bundlePrice ?? picks[0].bundlePrice };
+          } else {
+            predictions.unshift(...json.predictions);
+          }
+          renderPredictions();
+          renderAdminPredictions();
+          resetPredictionForm();
+          showToast(isEditing ? "Prediction updated." : `${json.predictions.length} match${json.predictions.length === 1 ? '' : 'es'} published together.`);
+        } catch (error) {
+          showToast(error.message || 'Could not save prediction.');
+        }
+      });
+      adminPredictionList.addEventListener("change", async (event) => {
+        const statusInput = event.target.closest("[data-prediction-status]");
+        if (!statusInput) return;
+        const row = statusInput.closest("[data-prediction-id]");
+        const pick = predictions.find((item) => item.id === row.dataset.predictionId);
+        if (!pick || !["Pending", "Won", "Lost", "Void"].includes(statusInput.value)) return;
+        pick.status = statusInput.value;
+        try {
+          const response = await fetch('/api/predictions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pick)
+          });
+          const json = await response.json();
+          if (!response.ok) throw new Error(json.error || 'Unable to update status');
+          renderPredictions();
+          showToast(`${pick.home} vs ${pick.away}: result updated to ${pick.status}.`);
+        } catch (error) {
+          showToast(error.message || 'Could not update the prediction status.');
+        }
+      });
+      adminPredictionList.addEventListener("click", async (event) => {
+        const action = event.target.closest("[data-prediction-edit], [data-prediction-delete]");
+        if (!action) return;
+        const row = action.closest("[data-prediction-id]");
+        const pick = predictions.find((item) => item.id === row.dataset.predictionId);
+        if (!pick) return;
+        if (action.hasAttribute("data-prediction-delete")) {
+          try {
+            const response = await fetch(`/api/predictions/${encodeURIComponent(pick.id)}`, { method: 'DELETE' });
+            const json = await response.json();
+            if (!response.ok) throw new Error(json.error || 'Unable to delete prediction');
+            predictions = predictions.filter((item) => item.id !== pick.id);
+            saved.delete(pick.id);
+            slip.delete(pick.id);
+            updateCounts();
+            renderPredictions();
+            renderAdminPredictions();
+            if (adminPredictionId.value === pick.id) resetPredictionForm();
+            showToast("Prediction removed from the marketplace.");
+          } catch (error) {
+            showToast(error.message || 'Could not remove prediction.');
+          }
+          return;
+        }
+
+        adminPredictionId.value = pick.id;
+        adminMatchRows.replaceChildren(createAdminMatchRow(0, pick));
+        adminAddMatch.hidden = true;
+        for (const field of ["category", "confidence", "risk", "status"]) {
+          adminPredictionForm.elements.namedItem(field).value = String(pick[field]);
+        }
+        adminPredictionSubmit.innerHTML = '<i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Save changes';
+        adminPredictionCancel.hidden = false;
+        adminPredictionForm.querySelector('[name="home"]').focus();
+      });
+      document.getElementById("admin-risk-pricing-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const nextPrices = {};
+        for (const risk of ["Low", "Medium", "High"]) {
+          const input = document.querySelector(`[data-risk-price="${risk}"]`);
+          const price = Number(input.value);
+          if (!Number.isSafeInteger(price) || price < 0 || price > 1000000) {
+            input.setCustomValidity("Enter a whole KSh amount between 0 and 1,000,000.");
+            input.reportValidity();
+            return;
+          }
+          input.setCustomValidity("");
+          nextPrices[risk] = price;
+        }
+        adminState.riskPrices = nextPrices;
+        try {
+          const response = await fetch('/api/admin-state', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ riskPrices: nextPrices })
+          });
+          const json = await response.json();
+          if (!response.ok) throw new Error(json.error || 'Unable to save risk prices');
+          renderPredictions();
+          showToast("Low, medium, and high risk prices updated.");
+        } catch (error) {
+          showToast(error.message || 'Could not save risk prices.');
+        }
+      });
+      document.getElementById("admin-marketplace-pricing-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const nextPrices = {};
+        for (const input of marketplacePriceList.querySelectorAll("[data-feature-price]")) {
+          const price = Number(input.value);
+          if (!Number.isSafeInteger(price) || price < 0 || price > 1000000) {
+            input.setCustomValidity("Enter a whole KSh amount between 0 and 1,000,000.");
+            input.reportValidity();
+            return;
+          }
+          input.setCustomValidity("");
+          nextPrices[input.dataset.featurePrice] = price;
+        }
+        const previousPrices = adminState.featurePrices;
+        adminState.featurePrices = nextPrices;
+        try {
+          const response = await fetch('/api/admin-state', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ featurePrices: nextPrices })
+          });
+          const json = await response.json();
+          if (!response.ok) throw new Error(json.error || 'Unable to save marketplace prices');
+          renderMarketplacePrices();
+          showToast("Marketplace feature prices updated on the database.");
+        } catch (error) {
+          showToast(error.message || 'Could not save marketplace prices.');
+          adminState.featurePrices = previousPrices;
+        }
+      });
+      document.getElementById("admin-announcement-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const title = document.getElementById("admin-announcement-title").value.trim();
+        const body = document.getElementById("admin-announcement-body").value.trim();
+        if (!title || !body) {
+          showToast("Enter both an announcement title and message.");
+          return;
+        }
+        const previousAnnouncement = adminState.announcement;
+        adminState.announcement = { title, body };
+        try {
+          const response = await fetch('/api/admin-state', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ announcement: { title, body } })
+          });
+          const json = await response.json();
+          if (!response.ok) throw new Error(json.error || 'Unable to save announcement');
+          renderAnnouncement();
+          showToast("Announcement updated in the database.");
+        } catch (error) {
+          showToast(error.message || 'Could not save announcement.');
+          adminState.announcement = previousAnnouncement;
+        }
+      });
+      document.getElementById("admin-announcement-delete").addEventListener("click", async () => {
+        const previousAnnouncement = adminState.announcement;
+        adminState.announcement = null;
+        try {
+          const response = await fetch('/api/admin-state', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ announcement: null })
+          });
+          const json = await response.json();
+          if (!response.ok) throw new Error(json.error || 'Unable to delete announcement');
+          document.getElementById("admin-announcement-title").value = "";
+          document.getElementById("admin-announcement-body").value = "";
+          renderAnnouncement();
+          showToast("Announcement deleted from the database.");
+        } catch (error) {
+          showToast(error.message || 'Could not delete announcement.');
+          adminState.announcement = previousAnnouncement;
+        }
+      });
+      document.getElementById("admin-password-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const currentPassword = document.getElementById("admin-current-password").value;
+        const newPassword = document.getElementById("admin-new-password").value;
+        if (!currentPassword || !newPassword || newPassword.length < 6) {
+          showToast("Enter the current password and a new password with at least 6 characters.");
+          return;
+        }
+        try {
+          const response = await fetch('/api/change-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ currentPassword, newPassword })
+          });
+          const json = await response.json();
+          if (!response.ok) throw new Error(json.error || 'Unable to change password');
+          document.getElementById("admin-current-password").value = "";
+          document.getElementById("admin-new-password").value = "";
+          showToast('Password updated successfully.');
+        } catch (error) {
+          showToast(error.message || 'Could not change password.');
+        }
+      });
+      document.getElementById("admin-username-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const currentPassword = document.getElementById("admin-current-password-username").value;
+        const username = document.getElementById("admin-new-username").value.trim();
+        if (!/^[A-Za-z0-9._-]{3,32}$/.test(username) || !currentPassword) {
+          showToast("Enter a valid username and your current password.");
+          return;
+        }
+        try {
+          const response = await fetch('/api/change-username', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, currentPassword })
+          });
+          const json = await response.json();
+          if (!response.ok) throw new Error(json.error || 'Unable to change username');
+          lastAdminUsername = json.username;
+          if (currentUser) currentUser.username = json.username;
+          syncUserBadge(json.username, true);
+          document.getElementById("admin-current-password-username").value = "";
+          document.getElementById("admin-new-username").value = "";
+          showToast('Admin username updated successfully.');
+        } catch (error) {
+          showToast(error.message || 'Could not change username.');
+        }
+      });
+      authForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const username = authUsername.value.trim();
+        const password = authPassword.value;
+        try {
+          const response = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || 'Login failed');
+          lastAdminUsername = data.user.username;
+          currentUser = data.user;
+          isAuthenticated = true;
+          syncUserBadge(lastAdminUsername, true, 'admin');
+          authDialog.close();
+          await loadAdminData();
+          await openAdminPanel();
+          showToast(`Welcome, ${lastAdminUsername}.`);
+        } catch (error) {
+          showToast(error.message || 'Login failed.');
+        }
+      });
+
+      function openGuestAuth(purpose = null) {
+        if (currentUser && currentUser.role === 'admin') {
+          showToast('Log out of admin mode before using a guest account.');
+          return;
+        }
+        guestAuthPurpose = purpose;
+        guestAuthForm.reset();
+        guestAuthDialog.showModal();
+      }
+
+      async function completeGuestLogin(data) {
+        currentUser = data.user;
+        isAuthenticated = false;
+        syncUserBadge(currentUser.username, true, 'guest');
+        guestAuthDialog.close();
+        await loadTipsters();
+        showToast(`Welcome, ${currentUser.username}.`);
+        await updateGuestUnreadReplyCount();
+        const purpose = guestAuthPurpose;
+        guestAuthPurpose = null;
+        if (purpose === 'message') openGuestMessageForm();
+        if (purpose === 'profile') {
+          tipsterProfileForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          document.getElementById('tipster-display-name').focus();
+        }
+      }
+
+      guestAuthForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!guestAuthForm.reportValidity()) return;
+        try {
+          const response = await fetch('/api/guest/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: guestUsernameInput.value.trim(), password: guestPasswordInput.value })
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || 'Guest login failed.');
+          await completeGuestLogin(data);
+        } catch (error) {
+          showToast(error.message || 'Guest login failed.');
+        }
+      });
+
+      document.getElementById("guest-register").addEventListener("click", async () => {
+        if (!guestAuthForm.reportValidity()) return;
+        const registerButton = document.getElementById("guest-register");
+        registerButton.disabled = true;
+        registerButton.textContent = 'Creating account…';
+        try {
+          const response = await fetch('/api/register-guest', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: guestUsernameInput.value.trim(), password: guestPasswordInput.value })
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || 'Could not create guest account.');
+          await completeGuestLogin(data);
+        } catch (error) {
+          showToast(error.message || 'Could not create guest account.');
+        } finally {
+          registerButton.disabled = false;
+          registerButton.textContent = 'Create community account';
+        }
+      });
+      document.getElementById("guest-preview").addEventListener("click", () => {
+        guestAuthDialog.close();
+        guestAuthPurpose = null;
+      });
+
+      accountOpen.addEventListener('click', async () => {
+        if (currentUser && currentUser.role === 'guest') {
+          await logoutAdmin(true);
+          return;
+        }
+        openGuestAuth();
+      });
+
+      tipsterLoginCta.addEventListener('click', () => openGuestAuth('profile'));
+      guestMessageAdmin.addEventListener('click', () => openGuestMessageForm());
+      tipsterProfileForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!currentUser || currentUser.role !== 'guest') {
+          openGuestAuth('profile');
+          return;
+        }
+        const profile = {
+          displayName: document.getElementById('tipster-display-name').value.trim(),
+          specialty: document.getElementById('tipster-specialty').value.trim(),
+          bio: document.getElementById('tipster-bio').value.trim()
+        };
+        try {
+          const response = await fetch('/api/tipsters', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(profile)
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Could not save your tipster profile.');
+          await loadTipsters();
+          showToast('Your tipster profile was published.');
+        } catch (error) {
+          showToast(error.message || 'Could not save your tipster profile.');
+        }
+      });
+
+      adminMessageForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!currentUser || currentUser.role !== 'guest') {
+          showToast('Log in to a guest account to message admin.');
+          messagesDialog.close();
+          openGuestAuth('message');
+          return;
+        }
+        const message = document.getElementById('admin-message-text').value.trim();
+        try {
+          const response = await fetch('/api/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Could not send your message.');
+          adminMessageForm.reset();
+          await loadGuestMessageHistory();
+          showToast('Your private message was sent to admin.');
+        } catch (error) {
+          showToast(error.message || 'Could not send your message.');
+        }
+      });
+
+      document.getElementById("admin-open").addEventListener("click", async () => {
+        if (isAuthenticated) {
+          await openAdminPanel();
+          return;
+        }
+        authForm.reset();
+        authUsername.value = lastAdminUsername;
+        authDialog.showModal();
+      });
+      syncUserBadge('', false, '');
+      window.addEventListener("pagehide", () => {
+        if (currentUser && navigator.sendBeacon) {
+          navigator.sendBeacon('/api/logout');
+        }
+      });
+
+      document.querySelectorAll(".book-feature").forEach((link) => {
+        const feature = link.closest(".priced-feature");
+        const name = feature.querySelector(".feature-name").textContent.trim();
+        const price = feature.querySelector(".feature-price strong").textContent.trim();
+        const bookingUrl = new URL(link.href);
+        bookingUrl.searchParams.set("text", `Hello OddsHaven, I have booked ${name} for ${price}.`);
+        link.href = bookingUrl.toString();
+      });
+
+      document.querySelectorAll(".filter").forEach((button) => {
+        button.addEventListener("click", () => {
+          activeFilter = button.dataset.filter;
+          activeFeatureFilter = "all";
+          document.querySelectorAll(".filter").forEach((filter) => filter.classList.toggle("active", filter === button));
+          renderPredictions();
+        });
+      });
+      const featureCategories = {
+        marketplace: "All",
+        vip: "VIP",
+        daily: "Daily Odds",
+        featured: "All",
+        "correct-score": "Correct Score",
+        btts: "BTTS",
+        "over-under": "Over/Under",
+        "double-chance": "Double Chance"
+      };
+      function openPredictionCategory(category) {
+        activeFilter = category;
+        activeFeatureFilter = "all";
+        search.value = "";
+        document.querySelectorAll(".filter").forEach((filter) => filter.classList.toggle("active", filter.dataset.filter === category));
+        renderPredictions();
+        document.getElementById("predictions").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      document.querySelector(".feature-grid").addEventListener("click", (event) => {
+        if (event.target.closest(".book-feature")) return;
+        const card = event.target.closest("[data-feature]");
+        if (!card || card.disabled) return;
+        const feature = card.dataset.feature;
+        if (featureCategories[feature]) {
+          openPredictionCategory(featureCategories[feature]);
+          return;
+        }
+        if (feature === "confidence" || feature === "low-risk" || feature === "medium-risk") {
+          activeFilter = "All";
+          activeFeatureFilter = feature;
+          search.value = "";
+          document.querySelectorAll(".filter").forEach((filter) => filter.classList.toggle("active", filter.dataset.filter === "All"));
+          renderPredictions();
+          document.getElementById("predictions").scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+        const destinations = {
+          statistics: "#performance",
+          winning: "#performance",
+          football: "#live",
+          ai: "#analysis"
+        };
+        if (destinations[feature]) {
+          document.querySelector(destinations[feature]).scrollIntoView({ behavior: "smooth", block: "start" });
+          if (feature === "ai") document.getElementById("analysis-button").click();
+          return;
+        }
+        if (feature === "ticket") {
+          document.querySelector('[data-action="slip"]').click();
+        } else if (feature === "alerts") {
+          document.getElementById("notify-button").click();
+        }
+      });
+      search.addEventListener("input", renderPredictions);
+      list.addEventListener("click", (event) => {
+        const saveButton = event.target.closest("[data-save]");
+        const slipButton = event.target.closest("[data-slip]");
+        if (saveButton) {
+          const id = saveButton.dataset.save;
+          saved.has(id) ? saved.delete(id) : saved.add(id);
+          updateCounts();
+          renderPredictions();
+          showToast(saved.has(id) ? "Pick saved to this demo session." : "Pick removed from saved items.");
+        } else if (slipButton) {
+          const id = slipButton.dataset.slip;
+          const pick = predictions.find((item) => item.id === id);
+          if (pick?.bundleId) {
+            const bundlePicks = predictions.filter((item) => item.bundleId === pick.bundleId);
+            const removeBundle = bundlePicks.every((item) => slip.has(item.id));
+            bundlePicks.forEach((item) => removeBundle ? slip.delete(item.id) : slip.add(item.id));
+          } else {
+            slip.has(id) ? slip.delete(id) : slip.add(id);
+          }
+          updateCounts();
+          renderPredictions();
+          showToast(pick?.bundleId
+            ? (slip.has(id) ? `Added all ${getBundleMatchCount(pick.bundleId)} Super Odds matches for one package price.` : "Removed the Super Odds package from My slip.")
+            : (slip.has(id) ? "Added to My slip." : "Removed from My slip."));
+        }
+      });
+      document.querySelector('[data-action="saved"]').addEventListener("click", () => {
+        activeFilter = "All";
+        activeFeatureFilter = "all";
+        document.querySelectorAll(".filter").forEach((filter) => filter.classList.toggle("active", filter.dataset.filter === "All"));
+        search.value = "";
+        renderPredictions();
+        showToast(`${saved.size} saved pick${saved.size === 1 ? "" : "s"} in this demo session.`);
+      });
+      document.getElementById("notify-button").addEventListener("click", openNotifications);
+      document.getElementById("analysis-button").addEventListener("click", () => showToast("AI match analysis is a preview feature; no live data or model is connected."));
+      document.getElementById("today").textContent = new Intl.DateTimeFormat(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric" }).format(new Date());
+      document.querySelectorAll(".nav a[href^='#']").forEach((link) => {
+        link.addEventListener("click", () => {
+          document.querySelectorAll(".nav a").forEach((item) => item.classList.toggle("active", item === link));
+        });
+      });
+      renderPredictions();
+      updateCounts();
+      loadTipsters();
+      loadAdminNotifications();
+      checkSession();
+      window.setInterval(() => {
+        if (currentUser && currentUser.role === 'admin') {
+          updateAdminUnreadCount();
+          if (adminDialog.open) loadCommandCenter();
+        }
+        if (currentUser && currentUser.role === 'guest') updateGuestUnreadReplyCount();
+      }, 30000);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && currentUser && currentUser.role === 'guest') updateGuestUnreadReplyCount();
+      });
+    })();
+  </script>
+</body>
+</html>
